@@ -6,16 +6,20 @@
 package Vistas;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.TextField;
 import java.time.LocalTime;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,17 +40,29 @@ public class VistaBBDD_Insertar extends JFrame {
 
     //Establecemos un objeto de "dimension", que le pasaremos al metodo
     //"setMinimunSize() para establecer el tamaño mínimo que podrá tener nuestra aplicación
-    public JPanel panelBotones;
-    public JPanel panelTextArea;
-
+    
+    public JPanel panelFormularios; //Este es el panel que contiene los DISTINTOS PANELES que albergan los formularios y combobox
+    
+    public JPanel panelGrupos;
+    public JPanel panelGrupoIzquierda;  //Renombrar como grupo izquierda
+    public JPanel panelGrupoDerecha;//Renombrar como grupo derecha
+    
+    public JPanel panelArticulos;
+    public JPanel panelArticuloIzquierda;//Renombrar como articulo izquierda
+    public JPanel panelArticuloDerecha;//Renombrar como articulo derecha
+    
+    public JPanel panelDescripcion; //Renombrar a panel descripcion
+    public JPanel panelDescripcionSuperior ;
+    public  JTextArea textArea;
+    public JScrollPane scroll;
+    
     
       //DECLARANDO TODOS LOS ELEMENTOS QUE COMPONEN NUESTRA VENTANA
     //Declarando Campos y Area de Texto 
   
     
     //Declarando SCROLLPane para agregar el TExtArea a este mas abajo
-    public  JTextArea textArea;
-    JScrollPane scroll;
+   
 
     //Declarando Etiquetas
  
@@ -55,7 +71,7 @@ public class VistaBBDD_Insertar extends JFrame {
 
     
     
-    
+        
     
     
     
@@ -73,28 +89,265 @@ public class VistaBBDD_Insertar extends JFrame {
         setIconImage(icono);
         setTitle("BBDD-INSERTAR");
         
+        //Panel que contendra los paneles de GRUPOS,ARTICULOS
+        panelFormularios= new JPanel();
+        panelFormularios.setLayout(new BoxLayout(panelFormularios, BoxLayout.Y_AXIS)); //Indicamos qu elos agregue hacia ABAJO
+      
+        
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+        //Creamos PANEL en el que se alojaran los PANELES QUE CONFORMAN las OPCIONES y textos de GRUPOS
+        panelGrupos= new JPanel();
+        panelGrupos.setLayout(new BoxLayout(panelGrupos, BoxLayout.X_AXIS));//Indicamos que los agregue hacia LA DERECHA
+        //Creamos un area vacía de 20px al principio de este contenedor (en la izquierda), para dejar un espacio (por estetica)
+        panelGrupos.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
+    
+        
+    //----------------------------------------------------------------------------------------------------------------------------------------    
+        //Creamos el PANEL GRUPO-IZQUIERDA, el cual contendrŕa un combobox para escoger grupo y una etiqueta para indicar para que sirve
+        panelGrupoIzquierda = new JPanel();
+        panelGrupoIzquierda.setLayout(new BoxLayout(panelGrupoIzquierda, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
+       
+        
+        //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
+        JLabel tituloComboboxGrupo = new JLabel("Seleccione GRUPO    ");
+        //Alineamos la eqtiqueta a la IZQUIERDA
+        tituloComboboxGrupo.setAlignmentX(LEFT_ALIGNMENT); 
+        //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
+         tituloComboboxGrupo.setBorder(BorderFactory.createEmptyBorder( 10,0, 5, 130)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
+        
+        //Añadimos el TituloDelCombobox a este PANEL (GRUPO-IZQUIERDA)
+         panelGrupoIzquierda.add(tituloComboboxGrupo);
+              
+        //Procedemos a crear nuestro COMBOBOX de GRUPOS
+        JComboBox comboGrupos = new JComboBox();
+        //Le asignamos tamaño 
+        comboGrupos.setSize(new Dimension(250, 30));
+        //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
+        comboGrupos.setMaximumSize(new Dimension(250, 30));
+        comboGrupos.setMinimumSize(new Dimension(250, 30));
      
-        panelBotones = new JPanel();
-        panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.X_AXIS));
-        JLabel titulo = new JLabel("INSERTAR");
-        panelBotones.add(Box.createRigidArea(new Dimension(10,0)));
-        panelBotones.add(titulo);
-      //  panelBotones.add(Box.createRigidArea(new Dimension(0,100)));
+        
+       
+        //Le indicamos que se alineará a la izquierda
+        comboGrupos.setAlignmentX(LEFT_ALIGNMENT);
+        //Añadimos el Combobox a este PANEL (GRUPO-IZQUIERDA)
+         panelGrupoIzquierda.add(comboGrupos);
+         //Agregaremos un AreaRigida de unos cuantros Pixeles, para darle un poco de espacio entre el siguiente elemento que se agregue
+         panelGrupoIzquierda.add(Box.createRigidArea(new Dimension(0,10)));
+   
+        //Ya completado el GRUPO_IZQUIERDA, procedemos a agregarlo al PANEL-GRUPOS
+        panelGrupos.add(panelGrupoIzquierda);
+        
+        //Creamos un AreaRigida, para que cuando se encoja la pantalla, quede el mismo borde que pusimos al inicio y se vea bonito
+        panelGrupos.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
+        //Agregamos un separador entre los dos paneles GRUPOS poara separarlos y que se vea mejor
+        JSeparator separator2 = new JSeparator(1);//Al llamar al separador utilizando 1 en el constructor, le indicamos que el separador estará en VERTICAL
+          separator2.setSize(2,0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
+          separator2.setMaximumSize(new Dimension(2,600));
+          //Agregamos el separador al Panel GRUPOS
+          panelGrupos.add(separator2);      
+          panelGrupos.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
+          
+               
+     //----------------------------------------------------------------------------------------------------------------------------------------    
+        //Creamos el PANEL GRUPO-DERECHA, el cual contendrŕa un TextField para insertar un grupo, una etiqueta para indicar para que sirve y un BOTON para realizar el ALTA del nuevo GRUPO        
+            
+        panelGrupoDerecha = new JPanel();
+        panelGrupoDerecha.setLayout(new BoxLayout(panelGrupoDerecha, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
+       
+        //Creamos la ETIQUETA que INDICARÁ que hace nuestro TextField
+        JLabel tituloGrupoNuevo = new JLabel("Nombre para Nuevo GRUPO:");
+        //Alineamos la eqtiqueta a la IZQUIERDA
+         tituloGrupoNuevo.setAlignmentX(LEFT_ALIGNMENT); 
+            tituloGrupoNuevo.setBorder(BorderFactory.createEmptyBorder( 10,0, 0, 0)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
+   //     panelGrupoDerecha.add(Box.createHorizontalGlue()); 
+        panelGrupoDerecha.add(tituloGrupoNuevo); 
+        
+         
+         JTextField textFieldGrupoNuevo = new JTextField(50);
+         textFieldGrupoNuevo.setSize(new Dimension(150, 30));
+            //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
+      textFieldGrupoNuevo.setMaximumSize(new Dimension(400, 30));
+         textFieldGrupoNuevo.setAlignmentX(LEFT_ALIGNMENT); 
+         panelGrupoDerecha.add(textFieldGrupoNuevo);
+               //Agregaremos un AreaRigida de unos cuantros Pixeles, para darle un poco de espacio entre el siguiente elemento que se agregue
+         panelGrupoDerecha.add(Box.createRigidArea(new Dimension(0,2)));
+         
+         //Creamos BOTON PARA ENVIAR GRUPO NUEVO
+         JButton AltaGrupo = new JButton("Crear Grupo");
+         panelGrupoDerecha.add(AltaGrupo);
+   //       panelGrupoDerecha.setBorder(BorderFactory.createEmptyBorder( 10,10, 0, 10));
+       panelGrupoDerecha.add(Box.createRigidArea(new Dimension(panelGrupos.getWidth(),10)));
+          
+          panelGrupos.add(panelGrupoDerecha);
+        panelGrupos.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
+           //Le ponemos "PEGAMENTO" XD, para que se haga un area invisible que permitirá redimensionar la ventana sin que este componente se mueva de su sitio (ya que el area pegamento será la que se estire o encoja según precise)
+            panelGrupos.add(Box.createHorizontalGlue()); 
+        
+        //AÑADIENDO PANEL GRUPOS A EL PANEL "Formularios"
+        panelFormularios.add(panelGrupos);
+         
+          JSeparator separator = new JSeparator();
+        panelFormularios.add( separator);
+       
+  ///////////////////FIN DE PANEL grupos//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
         
-         panelTextArea = new JPanel();
-        panelTextArea.setLayout(new BoxLayout(panelTextArea, BoxLayout.X_AXIS));
+  
+    ///////////////////COMIENZA EL PANEL ARTICULOS,QUE CONTIENE LOS PANELES NECESARIOS PARA trabajar con los articulos///////////////////////////////   
+    
+    
+            panelArticulos= new JPanel();
+        panelArticulos.setLayout(new BoxLayout(panelArticulos, BoxLayout.X_AXIS));//Indicamos que los agregue hacia LA DERECHA
+        //Creamos un area vacía de 20px al principio de este contenedor (en la izquierda), para dejar un espacio (por estetica)
+         panelArticulos.add(Box.createRigidArea(new Dimension(20, panelArticulos.getHeight())));
+    
         
-
+    //----------------------------------------------------------------------------------------------------------------------------------------    
+        //Creamos el PANEL ARTICULO-IZQUIERDA, el cual contendrŕa un combobox para escoger grupo y una etiqueta para indicar para que sirve
+        panelArticuloIzquierda = new JPanel();
+        panelArticuloIzquierda.setLayout(new BoxLayout(panelArticuloIzquierda, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
+       
+        
+        //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
+        JLabel tituloComboboxArticulo = new JLabel("Seleccione ARTICULO");
+        //Alineamos la eqtiqueta a la IZQUIERDA
+        tituloComboboxArticulo.setAlignmentX(LEFT_ALIGNMENT); 
+        //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
+         tituloComboboxArticulo.setBorder(BorderFactory.createEmptyBorder( 10,0, 5, 131)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
+      
+        //Añadimos el TituloDelCombobox a este PANEL (ARTICULO-IZQUIERDA)
+          panelArticuloIzquierda.add(tituloComboboxArticulo);
+              
+        //Procedemos a crear nuestro COMBOBOX de GRUPOS
+        JComboBox comboArticulos = new JComboBox();
+        //Le asignamos tamaño 
+        comboArticulos.setSize(new Dimension(250, 30));
+        //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
+        comboArticulos.setMaximumSize(new Dimension(250, 30));
+        comboArticulos.setMinimumSize(new Dimension(250, 30));
      
+        
+       
+        //Le indicamos que se alineará a la izquierda
+        comboArticulos.setAlignmentX(LEFT_ALIGNMENT);
+        //Añadimos el Combobox a este PANEL (GRUPO-IZQUIERDA)
+         panelArticuloIzquierda.add(comboArticulos);
+         //Agregaremos un AreaRigida de unos cuantros Pixeles, para darle un poco de espacio entre el siguiente elemento que se agregue
+         panelArticuloIzquierda.add(Box.createRigidArea(new Dimension(0,10)));
+   
+        //Ya completado el GRUPO_IZQUIERDA, procedemos a agregarlo al PANEL-GRUPOS
+        panelArticulos.add(panelArticuloIzquierda);
+        
+        //Creamos un AreaRigida, para que cuando se encoja la pantalla, quede el mismo borde que pusimos al inicio y se vea bonito
+        panelArticulos.add(Box.createRigidArea(new Dimension(20,panelArticulos.getHeight())));
+        //Agregamos un separador entre los dos paneles GRUPOS poara separarlos y que se vea mejor
+        JSeparator separator3 = new JSeparator(1);//Al llamar al separador utilizando 1 en el constructor, le indicamos que el separador estará en VERTICAL
+          separator3.setSize(2,0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
+          separator3.setMaximumSize(new Dimension(2,600));
+          //Agregamos el separador al Panel GRUPOS
+          panelArticulos.add(separator3);      
+          panelArticulos.add(Box.createRigidArea(new Dimension(20,panelArticulos.getHeight())));
+          
+               
+     //----------------------------------------------------------------------------------------------------------------------------------------    
+        //Creamos el PANEL ARTICULOS-DERECHA, el cual contendrŕa un TextField para insertar un grupo, una etiqueta para indicar para que sirve y un BOTON para realizar el ALTA del nuevo GRUPO        
+            
+        panelArticuloDerecha = new JPanel();
+        panelArticuloDerecha.setLayout(new BoxLayout(panelArticuloDerecha, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
+       
+        //Creamos la ETIQUETA que INDICARÁ que hace nuestro TextField
+        JLabel tituloArticuloNuevo = new JLabel("Nombre para Nuevo ARTÍCULO:");
+        //Alineamos la eqtiqueta a la IZQUIERDA
+         tituloArticuloNuevo.setAlignmentX(LEFT_ALIGNMENT); 
+            tituloArticuloNuevo.setBorder(BorderFactory.createEmptyBorder( 10,0, 0, 0)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
+   //     panelArticuloDerecha.add(Box.createHorizontalGlue()); 
+        panelArticuloDerecha.add(tituloArticuloNuevo); 
+        
+         
+         JTextField textFieldArticuloNuevo = new JTextField(50);
+         textFieldArticuloNuevo.setSize(new Dimension(150, 30));
+            //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
+      textFieldArticuloNuevo.setMaximumSize(new Dimension(400, 30));
+         textFieldArticuloNuevo.setAlignmentX(LEFT_ALIGNMENT); 
+         panelArticuloDerecha.add(textFieldArticuloNuevo);
+               //Agregaremos un AreaRigida de unos cuantros Pixeles, para darle un poco de espacio entre el siguiente elemento que se agregue
+         panelArticuloDerecha.add(Box.createRigidArea(new Dimension(0,2)));
+         
+         //Creamos BOTON PARA ENVIAR GRUPO NUEVO
+         JButton AltaArticulo = new JButton("Crear Artículo");
+         panelArticuloDerecha.add(AltaArticulo);
+   //       panelArticuloDerecha.setBorder(BorderFactory.createEmptyBorder( 10,10, 0, 10));
+       panelArticuloDerecha.add(Box.createRigidArea(new Dimension(panelArticulos.getWidth(),10)));
+          
+          panelArticulos.add(panelArticuloDerecha);
+        panelArticulos.add(Box.createRigidArea(new Dimension(20,panelArticulos.getHeight())));
+           panelArticulos.add(Box.createHorizontalGlue()); 
+        
+        //AÑADIENDO PANEL GRUPOS A EL PANEL "Formularios"
+        panelFormularios.add(panelArticulos);
+         
+          JSeparator separator4 = new JSeparator();
+        panelFormularios.add( separator4);
+      
+    
+  ///////////////////FIN DE PANEL ARTICULOS//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+      
+    
+        
+         panelDescripcion = new JPanel();
+        panelDescripcion.setLayout(new BoxLayout(panelDescripcion, BoxLayout.Y_AXIS));
+        
+          
+         panelDescripcionSuperior = new JPanel();
+         panelDescripcionSuperior.setLayout(new BoxLayout( panelDescripcionSuperior , BoxLayout.X_AXIS));//Indicamos qu elos agregue hacia a la DERECHA
+         panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(panelDescripcionSuperior.getWidth(),40)));
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(10,panelDescripcionSuperior.getHeight())));
         //Inicializando CAMPOS y AREA de Texto (aqui indicaremos lo que queremos que tenga escrito dentro el campo, EN MI CASO ESTARAN VACIOS)
    
+        JLabel tituloDescripcion= new JLabel("Escriba Descripción:");
+        tituloDescripcion.setBorder(BorderFactory.createEmptyBorder( 20,0, 0, 0));
+        panelDescripcionSuperior.add(tituloDescripcion);
         
-
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(20,panelDescripcionSuperior.getHeight())));
+        
+        JButton agregarDescripcion = new JButton("INSERTAR Descrip.");
+        agregarDescripcion.setBackground(Color.green);
+        panelDescripcionSuperior.add(agregarDescripcion);
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(2,panelDescripcionSuperior.getHeight())));
+        
+         JSeparator separator5 = new JSeparator(1);
+           separator5.setSize(2,0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
+          separator5.setMaximumSize(new Dimension(2,600));
+        panelDescripcionSuperior.add( separator5);
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(100,panelDescripcionSuperior.getHeight())));
+    
+        
+        
+        JButton limpiarPantalla = new JButton("Limpiar Pantalla");
+        limpiarPantalla.setBackground(Color.YELLOW);
+        limpiarPantalla.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
+        panelDescripcionSuperior.add(limpiarPantalla);
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(20,panelDescripcionSuperior.getHeight())));
+        
+        JButton salir = new JButton("SALIR");
+        salir.setBackground(Color.RED);
+        salir.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
+        panelDescripcionSuperior.add(salir);
+        
+        
+        panelDescripcionSuperior.add(Box.createHorizontalGlue());
+        
+        panelDescripcion.add( panelDescripcionSuperior);
+  //      tituloTA.setBorder(BorderFactory.createEmptyBorder( 10,10, 10, 10));
+  
         textArea = new JTextArea("");//INicializando al TextArea 
         textArea.setEditable(true);//Haciendo que TextArea NO SEA EDITABLE
          scroll= new JScrollPane(textArea);//Agregando SCROLL a TextArea
-        panelTextArea.add(scroll); 
+          //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
+         scroll.setBorder(BorderFactory.createEmptyBorder( 2,10, 10, 10));
+        panelDescripcion.add(scroll); 
         
         
     //    TextArea_existentes.setLineWrap(true); //Haciendo que se haga salto de linea al llegar al final
@@ -103,7 +356,7 @@ public class VistaBBDD_Insertar extends JFrame {
 
         
         
-        
+            
         
         
         
@@ -132,10 +385,11 @@ public class VistaBBDD_Insertar extends JFrame {
         //Hacemos visible la vista Principal      
      //   setVisible(true);
      Container contentPane = getContentPane();
-       contentPane.add(panelBotones,BorderLayout.NORTH);
-       contentPane.add(panelTextArea, BorderLayout.CENTER);
-               this.setBounds(0,0,1000, 1000);
-         this.setLocationRelativeTo(null);        
+       contentPane.add(panelFormularios,BorderLayout.NORTH);
+       contentPane.add(panelDescripcion, BorderLayout.CENTER);
+               this.setBounds(0,0,600, 600);
+               this.setMinimumSize(new Dimension(600, 600));
+        // this.setLocationRelativeTo(null);        
   //   this.pack();
     }
     

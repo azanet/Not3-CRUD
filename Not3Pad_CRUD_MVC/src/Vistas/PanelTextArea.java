@@ -28,9 +28,10 @@ import javax.swing.undo.UndoManager;
 public class PanelTextArea extends JPanel{
     
     public JTextArea textArea;
+    
+    protected JScrollPane scrollPane;
     //Declarando objeto de UndoManager, que nos permitirá Deshacer y Rehacer    
     public UndoManager manager; 
-    protected JScrollPane scrollPane;
     public JPopupMenu popMenu;
     public JMenuItem pop_Rehacer;
     public JMenuItem pop_Deshacer;    

@@ -13,6 +13,9 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
 import java.time.LocalTime;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -22,8 +25,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -31,6 +36,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.Document;
+import javax.swing.undo.UndoManager;
 
 /**
  *
@@ -58,6 +67,17 @@ public class VistaBBDD_Insertar extends JFrame {
     
     
       //DECLARANDO TODOS LOS ELEMENTOS QUE COMPONEN NUESTRA VENTANA
+    //Declarando UndoManager (para rehacer y deshacer)
+      public UndoManager manager; 
+      //Declarando popupMenu y sus botones
+    public JPopupMenu popMenu;
+    public JMenuItem pop_Rehacer;
+    public JMenuItem pop_Deshacer;    
+    public JMenuItem pop_Copiar;
+    public JMenuItem pop_Cortar;
+    public JMenuItem pop_Pegar;
+    public JMenuItem pop_Imprimir;
+    
     //Declarando Campos y Area de Texto 
   
     
@@ -79,11 +99,34 @@ public class VistaBBDD_Insertar extends JFrame {
     public VistaBBDD_Insertar() {
 
         // super("Not3Pad");
+                this.popMenu = new JPopupMenu();
+        this.pop_Rehacer = new JMenuItem("Rehacer");
+        this.pop_Deshacer = new JMenuItem("Deshacer");        
+       this.pop_Copiar = new JMenuItem("Copiar");
+        this.pop_Cortar = new JMenuItem("Cortar");
+        this.pop_Pegar = new JMenuItem("Pegar");
+       this. pop_Imprimir = new JMenuItem("Imprimir");
+            
+        
+        
         Iniciar();
 
     }
 
     private void Iniciar() {
+                
+        this.popMenu.add(pop_Rehacer);
+        this.popMenu.add(pop_Deshacer);
+        this.popMenu.addSeparator();
+        this.popMenu.add(pop_Copiar);
+        this.popMenu.add(pop_Cortar);
+        this.popMenu.add(pop_Pegar);
+        this.popMenu.addSeparator();
+        this.popMenu.add(pop_Imprimir);
+                
+        //JPOPUPMENU Agregamos a los botones el JPopupMenu su correspondiente Listener
+ 
+        
         //Seteamos TITULO a la ventana principal 
         Image icono = new ImageIcon(getClass().getResource("/Images/LogoKrazyLab.png")).getImage();
         setIconImage(icono);
@@ -175,6 +218,7 @@ public class VistaBBDD_Insertar extends JFrame {
          
          //Creamos BOTON PARA ENVIAR GRUPO NUEVO
          JButton AltaGrupo = new JButton("Crear Grupo");
+         AltaGrupo.setBackground(new Color(206,255,246));
          panelGrupoDerecha.add(AltaGrupo);
    //       panelGrupoDerecha.setBorder(BorderFactory.createEmptyBorder( 10,10, 0, 10));
        panelGrupoDerecha.add(Box.createRigidArea(new Dimension(panelGrupos.getWidth(),10)));
@@ -276,6 +320,7 @@ public class VistaBBDD_Insertar extends JFrame {
          
          //Creamos BOTON PARA ENVIAR GRUPO NUEVO
          JButton AltaArticulo = new JButton("Crear Artículo");
+         AltaArticulo.setBackground(new Color(206,255,246));
          panelArticuloDerecha.add(AltaArticulo);
    //       panelArticuloDerecha.setBorder(BorderFactory.createEmptyBorder( 10,10, 0, 10));
        panelArticuloDerecha.add(Box.createRigidArea(new Dimension(panelArticulos.getWidth(),10)));
@@ -307,32 +352,33 @@ public class VistaBBDD_Insertar extends JFrame {
         //Inicializando CAMPOS y AREA de Texto (aqui indicaremos lo que queremos que tenga escrito dentro el campo, EN MI CASO ESTARAN VACIOS)
    
         JLabel tituloDescripcion= new JLabel("Escriba Descripción:");
-        tituloDescripcion.setBorder(BorderFactory.createEmptyBorder( 20,0, 0, 0));
+        tituloDescripcion.setBorder(BorderFactory.createEmptyBorder( 30,0, 0, 0));
         panelDescripcionSuperior.add(tituloDescripcion);
         
-        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(20,panelDescripcionSuperior.getHeight())));
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(30,panelDescripcionSuperior.getHeight())));
         
-        JButton agregarDescripcion = new JButton("INSERTAR Descrip.");
-        agregarDescripcion.setBackground(Color.green);
+        JButton agregarDescripcion = new JButton("INSERTAR Descripción");
+        agregarDescripcion.setBackground(new Color(184,255,181));
+        agregarDescripcion.setBorder(BorderFactory.createEmptyBorder( 10, 8, 10, 8));
         panelDescripcionSuperior.add(agregarDescripcion);
-        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(2,panelDescripcionSuperior.getHeight())));
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(35,panelDescripcionSuperior.getHeight())));
         
          JSeparator separator5 = new JSeparator(1);
            separator5.setSize(2,0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
           separator5.setMaximumSize(new Dimension(2,600));
         panelDescripcionSuperior.add( separator5);
-        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(100,panelDescripcionSuperior.getHeight())));
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(35,panelDescripcionSuperior.getHeight())));
     
         
         
         JButton limpiarPantalla = new JButton("Limpiar Pantalla");
-        limpiarPantalla.setBackground(Color.YELLOW);
+        limpiarPantalla.setBackground(new Color(255,253,160));
         limpiarPantalla.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
         panelDescripcionSuperior.add(limpiarPantalla);
         panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(20,panelDescripcionSuperior.getHeight())));
         
         JButton salir = new JButton("SALIR");
-        salir.setBackground(Color.RED);
+        salir.setBackground(new Color(255,156,154));
         salir.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
         panelDescripcionSuperior.add(salir);
         
@@ -344,22 +390,46 @@ public class VistaBBDD_Insertar extends JFrame {
   
         textArea = new JTextArea("");//INicializando al TextArea 
         textArea.setEditable(true);//Haciendo que TextArea NO SEA EDITABLE
-         scroll= new JScrollPane(textArea);//Agregando SCROLL a TextArea
+        //Agregamos el PopUpMenu al TextArea
+        textArea.setComponentPopupMenu(this.popMenu);
+        //Con este metodo hacemos que se despliegue el menu al clicar el boton derecho
+       textArea.setInheritsPopupMenu(true);
+        
+        scroll= new JScrollPane(textArea);//Agregando SCROLL a TextArea
           //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
          scroll.setBorder(BorderFactory.createEmptyBorder( 2,10, 10, 10));
         panelDescripcion.add(scroll); 
+                
         
         
     //    TextArea_existentes.setLineWrap(true); //Haciendo que se haga salto de linea al llegar al final
        // TextArea_existentes.setWrapStyleWord(true);
         //Agregamos TEXTAREA al Scroll, como textArea está agregado a Scroll, será a este al que AGREGEMOS y ASIGNEMOS el tamaño mas abajo
 
-        
-        
+        //Inicializamos los componentes del PopUp-menu
+
             
         
+          //Menú POP-UP AGREGANDO Botones al PopupMenu
+
+
+       
         
+        //Agregamos el PopUpMenu al TextArea
+        textArea.setComponentPopupMenu(popMenu);
+        //Con este metodo hacemos que se despliegue el menu al clicar el boton derecho
+       textArea.setInheritsPopupMenu(true);
+     
         
+             //Agregando manager para //REHACER-DESHACER
+       manager = new UndoManager();
+       Document document = textArea.getDocument();
+       document.addUndoableEditListener(new UndoableEditListener() {
+           @Override
+           public void undoableEditHappened(UndoableEditEvent e) {
+               manager.addEdit(e.getEdit());
+           }
+       });
         
         
         
@@ -376,7 +446,14 @@ public class VistaBBDD_Insertar extends JFrame {
         }
         
           
-           
+                   
+        //JPOPUPMENU Agregamos a los botones el JPopupMenu su correspondiente Listener
+      pop_Rehacer.addActionListener(new OyentePopRehacer());
+      pop_Deshacer.addActionListener(new OyentePopDeshacer());        
+      pop_Copiar.addActionListener(new OyentePopCopiar());
+      pop_Cortar.addActionListener(new OyentePopCortar());
+      pop_Pegar.addActionListener(new OyentePopPegar());
+      pop_Imprimir.addActionListener(new OyentePopImprimir());
 
         
       //          setResizable(false);
@@ -390,8 +467,86 @@ public class VistaBBDD_Insertar extends JFrame {
                this.setBounds(0,0,600, 600);
                this.setMinimumSize(new Dimension(600, 600));
         // this.setLocationRelativeTo(null);        
-  //   this.pack();
-    }
+
+    }//Fin de iniciAR
+    
+    
+    
+    
+    ////////////////////////////////////////////////////////////////////////////////    
+///////////////////  POP-UP MENU  //////////////////////////////////////////////
+////////////CONFIGURARÉ LOS OYENTES DEL JPOPUPMENU EN ESTA MISMA CLASE//////////   
+    ////////////////////////////////////////////////////////////////////////////////   
+    class OyentePopRehacer implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+           if(manager.canRedo())
+                manager.redo();
+        }//Fin action performed
+    }//Fin del OyenteCOPIAR
+    
+    
+    ////////////////////////////////////////////////////////////////////////////////   
+    class OyentePopDeshacer implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+            if(manager.canUndo())
+                manager.undo();
+            
+        }//Fin action performed
+    }//Fin del OyenteCOPIAR
+    
+    
+    class OyentePopCopiar implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+            
+            textArea.copy();
+        }//Fin action performed
+    }//Fin del OyenteCOPIAR
+
+////////////////////////////////////////////////////////////////////////////////   
+    class OyentePopCortar implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+
+            textArea.cut();
+        }//Fin action performed
+    }//Fin del OyenteCOPIAR
+
+////////////////////////////////////////////////////////////////////////////////   
+    class OyentePopPegar implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+            textArea.paste();
+        }//Fin action performed
+    }//Fin del OyenteCOPIAR
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////   
+    class OyentePopImprimir implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            try {
+                //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+                textArea.print();
+            } catch (PrinterException ex) {
+                 JOptionPane.showMessageDialog(null, "Se produjo un error de impresión", "Error de Impresión", JOptionPane.ERROR_MESSAGE);
+            }
+        }//Fin action performed
+    }//Fin del OyenteCOPIAR
     
 
     

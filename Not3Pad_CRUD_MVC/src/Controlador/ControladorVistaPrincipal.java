@@ -39,8 +39,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
@@ -59,16 +62,18 @@ import javax.swing.text.Caret;
 public class ControladorVistaPrincipal {
 
     //Declarando OBJETOS de VistaPrincipal(el marco de la aplicación) y los Metodos(modelo)
-    public VistaPrincipal vistaPrincipal;
+    private VistaPrincipal vistaPrincipal;
     private final MetodosPrincipal metodosPrincipal;
     //Declarando OBJETOS de PANELES QUE CONFORMA LA VistaPrincipal
     public PanelMenuBar panelMenuBar; //Panel que contiene el JMenuBar
     public static Panel_Pestanias panelPestanias; //Panel que contiene el JTabbedPane
     public PanelTextArea panelTA; //este pane lo utilizaremos para recuperar el PANELTEXTAREA (que está contenida en algunas pestañas) que corresponda a la pestaña que hemos seleccionado
-    public VistaBBDD_Insertar BBDD_Insertar;
-    public VistaBBDD_Consultar BBDD_Consultar;
-    public VistaBBDD_Modificar BBDD_Modificar;
-    public VistaBBDD_Eliminar BBDD_Eliminar;
+      
+    private VistaBBDD_Insertar vistaInsertar;       
+    private VistaBBDD_Consultar vistaConsultar;
+    private VistaBBDD_Modificar vistaModificar;
+    private VistaBBDD_Eliminar vistaEliminar;
+
 
     //Declarando objetos y variables necesarias para poder cambiar el estilo y formato de los TextArea
     Font fuente;
@@ -88,21 +93,24 @@ public class ControladorVistaPrincipal {
         this.panelMenuBar = new PanelMenuBar();
         this.panelPestanias = new Panel_Pestanias();
         this.fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(); //Estos métodos rellenarán el Array con los estilos de texto disponibles en nuestro sistema
-       
-        BBDD_Insertar = new VistaBBDD_Insertar();
-        BBDD_Consultar = new VistaBBDD_Consultar();
-        BBDD_Modificar = new VistaBBDD_Modificar();
-        BBDD_Eliminar = new VistaBBDD_Eliminar();
+        vistaInsertar = new VistaBBDD_Insertar();
+        
         
                //Confiduramos el layout del panelMenuBar a Border, y agregamos los paneles
         vistaPrincipal.panelBase.setLayout(new BorderLayout());
 
-        //Seteamos el tamaño del panel que contiene el MENU (ya que si no no se muestra correctamente el componente)
+   
+        
+//Seteamos el tamaño del panel que contiene el MENU (ya que si no no se muestra correctamente el componente)
         //, dandole de ancho el mismo que tenga de X el panelBase 
         panelMenuBar.setPreferredSize(new Dimension(panelBase.getX(), 20));
         //Agregamos el panel que contiene el MENU
         vistaPrincipal.panelBase.add(panelMenuBar, BorderLayout.PAGE_START);
-        //Agregamos el panel que contiene el TextArea
+   
+   
+
+
+//Agregamos el panel que contiene el TextArea
         vistaPrincipal.panelBase.add(panelPestanias.TP, BorderLayout.CENTER);
         //Agregamos a vista principal su propio panelBase
 
@@ -139,10 +147,11 @@ public class ControladorVistaPrincipal {
         panelMenuBar.colorSeleccion.addActionListener(new OyenteColorSeleccion());
         panelMenuBar.colorTextoSeleccionado.addActionListener(new OyenteColorTextoSeleccionado());
         
-        panelMenuBar.insertar.addActionListener(new OyenteBBDD_Insertar());
-        panelMenuBar.consultar.addActionListener(new OyenteBBDD_Consultar());
-        panelMenuBar.modificar.addActionListener(new OyenteBBDD_Modificar());
-        panelMenuBar.eliminar.addActionListener(new OyenteBBDD_Eliminar());
+        //Insertando OYENTES DE OBJETOS a los CheckBox
+        panelMenuBar.insertar.addItemListener(new OyenteBBDD_Insertar());
+        panelMenuBar.consultar.addItemListener(new OyenteBBDD_Consultar());
+        panelMenuBar.modificar.addItemListener(new OyenteBBDD_Modificar());
+        panelMenuBar.eliminar.addItemListener(new OyenteBBDD_Eliminar());
         //Agregamos OYENTE al JTabbedPane, para saber a qué pestaña ha cambiado (y poder recuperar su componente para trabajar con el o lo que queramos)
         panelPestanias.TP.addChangeListener(new OyenteCambioPestana());
 
@@ -169,7 +178,7 @@ public class ControladorVistaPrincipal {
         panelMenuBar.edicion.setEnabled(false);
         panelMenuBar.imprimir.setEnabled(false);
         panelMenuBar.personalizar.setEnabled(false);
-        panelMenuBar.consultar.setEnabled(false);
+     //   panelMenuBar.consultar.setEnabled(false);
         panelMenuBar.comboBox.setEnabled(false);
         panelMenuBar.comboBoxStyle.setEnabled(false);
 
@@ -320,51 +329,58 @@ public class ControladorVistaPrincipal {
  //Fin de los listeners de COMBOBOX   
 
     
-    
+
+        
+
 
  ////////////////////////////////////////////////////////////////////////////////   
  //////// LISTENERS de los JCHECKBOX correspondientes al Menú BBDD   ////////////   
  ////////////////////////////////////////////////////////////////////////////////      
     //Listener de BBDD-INSERTAR
-    class OyenteBBDD_Insertar implements ActionListener{
+    class OyenteBBDD_Insertar implements ItemListener{
 
         @Override
-        public void actionPerformed(ActionEvent aea) {
-          
-        
+        public void itemStateChanged(ItemEvent ie) {  
             if (panelMenuBar.insertar.isSelected()){
                 
                 
-                BBDD_Insertar.setVisible(true);
-                BBDD_Insertar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.insertar));
                 
+                try {
+                    ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ControladorVistaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                vistaInsertar.setVisible(true);
+                vistaInsertar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.insertar));
+                 
               
             }else{
                   //Hacemos que se cierre solo ESTA ventana, sin finalizar la ejecución del programa
-                BBDD_Insertar.dispose();
+                vistaInsertar.dispose();
          }//Fin del If_else
-            
-        }//Fin de ActionPermormed
+         
+        }//Fin del ITEM-STATE-CHANGED
    
     }//Fin del Oyente INSERTAR
     
 
         //Listener de BBDD-CONSULTAR
-    class OyenteBBDD_Consultar implements ActionListener{
+    class OyenteBBDD_Consultar implements ItemListener{
 
         @Override
-        public void actionPerformed(ActionEvent aea) {
+         public void itemStateChanged(ItemEvent ie) {  
             
           if (panelMenuBar.consultar.isSelected()){
                 
-                
-                BBDD_Consultar.setVisible(true);
-                BBDD_Consultar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.consultar));
+                vistaConsultar = new VistaBBDD_Consultar();
+                 ControladorBBDD_Consultar Controlador_Consultar = new ControladorBBDD_Consultar(vistaConsultar);
+               vistaConsultar.setVisible(true);
+                vistaConsultar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.consultar));
                 
               
             }else{
                 //Hacemos que se cierre solo ESTA ventana, sin finalizar la ejecución del programa
-                BBDD_Consultar.dispose();
+                vistaConsultar.dispose();
          }//Fin del If_else
      
  
@@ -374,21 +390,25 @@ public class ControladorVistaPrincipal {
     
     
         //Listener de BBDD-MODIFICAR
-    class OyenteBBDD_Modificar implements ActionListener{
+    class OyenteBBDD_Modificar implements ItemListener{
 
         @Override
-        public void actionPerformed(ActionEvent aea) {
+         public void itemStateChanged(ItemEvent ie) {  
         
           if (panelMenuBar.modificar.isSelected()){
                 
                 
-                BBDD_Modificar.setVisible(true);
-                BBDD_Modificar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.modificar));
                 
+                vistaModificar = new VistaBBDD_Modificar();
+                 ControladorBBDD_Modificar Controlador_Modificar = new ControladorBBDD_Modificar(vistaModificar);
+                vistaModificar.setVisible(true);
+                vistaModificar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.modificar));
+               
               
             }else{
                 //Hacemos que se cierre solo ESTA ventana, sin finalizar la ejecución del programa
-                BBDD_Modificar.dispose();
+               vistaModificar.dispose();  
+               
          }//Fin del If_else
      
         }//Fin de ActionPermormed
@@ -397,21 +417,22 @@ public class ControladorVistaPrincipal {
     
     
         //Listener de BBDD-ELIMINAR
-    class OyenteBBDD_Eliminar implements ActionListener{
+    class OyenteBBDD_Eliminar implements ItemListener{
 
         @Override
-        public void actionPerformed(ActionEvent aea) {
+         public void itemStateChanged(ItemEvent ie) {  
           
           if (panelMenuBar.eliminar.isSelected()){
                 
-                
-                BBDD_Eliminar.setVisible(true);
-                BBDD_Eliminar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.eliminar));
+                 vistaEliminar = new VistaBBDD_Eliminar();
+                  ControladorBBDD_Eliminar Controlador_Eliminar = new ControladorBBDD_Eliminar(vistaEliminar); 
+                vistaEliminar.setVisible(true);
+                vistaEliminar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.eliminar));
                 
               
             }else{
                 //Hacemos que se cierre solo ESTA ventana, sin finalizar la ejecución del programa
-                BBDD_Eliminar.dispose();
+                vistaEliminar.dispose();
                 
          }//Fin del If_else
      

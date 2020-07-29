@@ -8,6 +8,7 @@ package Vistas;
 import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -18,7 +19,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author davidf
  */
-public class VistaBBDD_Consultar extends JFrame {
+public class VistaBBDD_Consultar extends JDialog {
 
     //Establecemos un objeto de "dimension", que le pasaremos al metodo
     //"setMinimunSize() para establecer el tamaño mínimo que podrá tener nuestra aplicación

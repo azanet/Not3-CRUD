@@ -51,15 +51,15 @@ CREATE TABLE `Descripcion` (
 -- Estructura de tabla para la tabla `Grupo`
 --
 
-CREATE TABLE `Grupo` (
-  `Nom_Grupos` varchar(50) NOT NULL
+CREATE TABLE `Grupos` (
+  `Nom_Grupo` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `Grupo`
 --
 
-INSERT INTO `Grupo` (`Nom_Grupos`) VALUES
+INSERT INTO `Grupos` (`Nom_Grupo`) VALUES
 ('Forense'),
 ('Pentesting');
 
@@ -85,8 +85,8 @@ ALTER TABLE `Descripcion`
 --
 -- Indices de la tabla `Grupo`
 --
-ALTER TABLE `Grupo`
-  ADD PRIMARY KEY (`Nom_Grupos`);
+ALTER TABLE `Grupos`
+  ADD PRIMARY KEY (`Nom_Grupo`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -106,14 +106,14 @@ ALTER TABLE `Descripcion`
 -- Filtros para la tabla `Articulos`
 --
 ALTER TABLE `Articulos`
-  ADD CONSTRAINT `Articulos_ibfk_1` FOREIGN KEY (`Nom_Grupo`) REFERENCES `Grupo` (`Nom_Grupos`);
+  ADD CONSTRAINT `Articulos_ibfk_1` FOREIGN KEY (`Nom_Grupo`) REFERENCES `Grupos` (`Nom_Grupo`);
 
 --
 -- Filtros para la tabla `Descripcion`
 --
 ALTER TABLE `Descripcion`
   ADD CONSTRAINT `Descripcion_ibfk_1` FOREIGN KEY (`Nom_Articulo`) REFERENCES `Articulos` (`Nom_Articulo`),
-  ADD CONSTRAINT `Descripcion_ibfk_2` FOREIGN KEY (`Nom_Grupo`) REFERENCES `Grupo` (`Nom_Grupos`);
+  ADD CONSTRAINT `Descripcion_ibfk_2` FOREIGN KEY (`Nom_Grupo`) REFERENCES `Grupos` (`Nom_Grupo`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

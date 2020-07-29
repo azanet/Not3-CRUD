@@ -9,20 +9,20 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.print.PrinterException;
-import java.time.LocalTime;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -33,7 +33,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.UndoableEditEvent;
@@ -45,7 +44,7 @@ import javax.swing.undo.UndoManager;
  *
  * @author davidf
  */
-public class VistaBBDD_Insertar extends JFrame {
+public class VistaBBDD_Insertar extends JDialog{
 
     //Establecemos un objeto de "dimension", que le pasaremos al metodo
     //"setMinimunSize() para establecer el tamaño mínimo que podrá tener nuestra aplicación
@@ -79,27 +78,24 @@ public class VistaBBDD_Insertar extends JFrame {
     public JMenuItem pop_Imprimir;
     
     //Declarando Campos y Area de Texto 
-  
+    public JTextField textFieldGrupoNuevo,textFieldArticuloNuevo ;
+     //Declarando Etiquetas
+   public JLabel tituloComboboxGrupo,tituloGrupoNuevo,tituloComboboxArticulo,tituloArticuloNuevo,tituloDescripcion;
+    //Declarando combobox
+    public JComboBox comboGrupos,comboArticulos;
+   //Declarando Botones
+   public JButton BotonAltaGrupo, BotonAltaArticulo, BotonagregarDescripcion, BotonlimpiarPantalla,Botonsalir ;
+   
     
-    //Declarando SCROLLPane para agregar el TExtArea a este mas abajo
    
 
-    //Declarando Etiquetas
- 
-
-    //Declarando Botones
-
-    
-    
-        
-    
     
     
 //Creando constructor
     public VistaBBDD_Insertar() {
 
         // super("Not3Pad");
-                this.popMenu = new JPopupMenu();
+         this.popMenu = new JPopupMenu();
         this.pop_Rehacer = new JMenuItem("Rehacer");
         this.pop_Deshacer = new JMenuItem("Deshacer");        
        this.pop_Copiar = new JMenuItem("Copiar");
@@ -152,7 +148,7 @@ public class VistaBBDD_Insertar extends JFrame {
        
         
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
-        JLabel tituloComboboxGrupo = new JLabel("Seleccione GRUPO    ");
+        tituloComboboxGrupo = new JLabel("Seleccione GRUPO    ");
         //Alineamos la eqtiqueta a la IZQUIERDA
         tituloComboboxGrupo.setAlignmentX(LEFT_ALIGNMENT); 
         //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
@@ -162,7 +158,7 @@ public class VistaBBDD_Insertar extends JFrame {
          panelGrupoIzquierda.add(tituloComboboxGrupo);
               
         //Procedemos a crear nuestro COMBOBOX de GRUPOS
-        JComboBox comboGrupos = new JComboBox();
+       comboGrupos = new JComboBox();
         //Le asignamos tamaño 
         comboGrupos.setSize(new Dimension(250, 30));
         //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
@@ -199,7 +195,7 @@ public class VistaBBDD_Insertar extends JFrame {
         panelGrupoDerecha.setLayout(new BoxLayout(panelGrupoDerecha, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
        
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro TextField
-        JLabel tituloGrupoNuevo = new JLabel("Nombre para Nuevo GRUPO:");
+        tituloGrupoNuevo = new JLabel("Nombre para Nuevo GRUPO:");
         //Alineamos la eqtiqueta a la IZQUIERDA
          tituloGrupoNuevo.setAlignmentX(LEFT_ALIGNMENT); 
             tituloGrupoNuevo.setBorder(BorderFactory.createEmptyBorder( 10,0, 0, 0)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
@@ -207,7 +203,7 @@ public class VistaBBDD_Insertar extends JFrame {
         panelGrupoDerecha.add(tituloGrupoNuevo); 
         
          
-         JTextField textFieldGrupoNuevo = new JTextField(50);
+         textFieldGrupoNuevo = new JTextField(50);
          textFieldGrupoNuevo.setSize(new Dimension(150, 30));
             //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
       textFieldGrupoNuevo.setMaximumSize(new Dimension(400, 30));
@@ -217,9 +213,9 @@ public class VistaBBDD_Insertar extends JFrame {
          panelGrupoDerecha.add(Box.createRigidArea(new Dimension(0,2)));
          
          //Creamos BOTON PARA ENVIAR GRUPO NUEVO
-         JButton AltaGrupo = new JButton("Crear Grupo");
-         AltaGrupo.setBackground(new Color(206,255,246));
-         panelGrupoDerecha.add(AltaGrupo);
+        BotonAltaGrupo = new JButton("Crear Grupo");
+         BotonAltaGrupo.setBackground(new Color(206,255,246));
+         panelGrupoDerecha.add(BotonAltaGrupo);
    //       panelGrupoDerecha.setBorder(BorderFactory.createEmptyBorder( 10,10, 0, 10));
        panelGrupoDerecha.add(Box.createRigidArea(new Dimension(panelGrupos.getWidth(),10)));
           
@@ -254,7 +250,7 @@ public class VistaBBDD_Insertar extends JFrame {
        
         
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
-        JLabel tituloComboboxArticulo = new JLabel("Seleccione ARTICULO");
+        tituloComboboxArticulo = new JLabel("Seleccione ARTICULO");
         //Alineamos la eqtiqueta a la IZQUIERDA
         tituloComboboxArticulo.setAlignmentX(LEFT_ALIGNMENT); 
         //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
@@ -264,7 +260,7 @@ public class VistaBBDD_Insertar extends JFrame {
           panelArticuloIzquierda.add(tituloComboboxArticulo);
               
         //Procedemos a crear nuestro COMBOBOX de GRUPOS
-        JComboBox comboArticulos = new JComboBox();
+         comboArticulos = new JComboBox();
         //Le asignamos tamaño 
         comboArticulos.setSize(new Dimension(250, 30));
         //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
@@ -301,7 +297,7 @@ public class VistaBBDD_Insertar extends JFrame {
         panelArticuloDerecha.setLayout(new BoxLayout(panelArticuloDerecha, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
        
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro TextField
-        JLabel tituloArticuloNuevo = new JLabel("Nombre para Nuevo ARTÍCULO:");
+         tituloArticuloNuevo = new JLabel("Nombre para Nuevo ARTÍCULO:");
         //Alineamos la eqtiqueta a la IZQUIERDA
          tituloArticuloNuevo.setAlignmentX(LEFT_ALIGNMENT); 
             tituloArticuloNuevo.setBorder(BorderFactory.createEmptyBorder( 10,0, 0, 0)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
@@ -309,7 +305,7 @@ public class VistaBBDD_Insertar extends JFrame {
         panelArticuloDerecha.add(tituloArticuloNuevo); 
         
          
-         JTextField textFieldArticuloNuevo = new JTextField(50);
+         textFieldArticuloNuevo = new JTextField(50);
          textFieldArticuloNuevo.setSize(new Dimension(150, 30));
             //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
       textFieldArticuloNuevo.setMaximumSize(new Dimension(400, 30));
@@ -319,9 +315,9 @@ public class VistaBBDD_Insertar extends JFrame {
          panelArticuloDerecha.add(Box.createRigidArea(new Dimension(0,2)));
          
          //Creamos BOTON PARA ENVIAR GRUPO NUEVO
-         JButton AltaArticulo = new JButton("Crear Artículo");
-         AltaArticulo.setBackground(new Color(206,255,246));
-         panelArticuloDerecha.add(AltaArticulo);
+          BotonAltaArticulo = new JButton("Crear Artículo");
+         BotonAltaArticulo.setBackground(new Color(206,255,246));
+         panelArticuloDerecha.add(BotonAltaArticulo);
    //       panelArticuloDerecha.setBorder(BorderFactory.createEmptyBorder( 10,10, 0, 10));
        panelArticuloDerecha.add(Box.createRigidArea(new Dimension(panelArticulos.getWidth(),10)));
           
@@ -351,16 +347,16 @@ public class VistaBBDD_Insertar extends JFrame {
         panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(10,panelDescripcionSuperior.getHeight())));
         //Inicializando CAMPOS y AREA de Texto (aqui indicaremos lo que queremos que tenga escrito dentro el campo, EN MI CASO ESTARAN VACIOS)
    
-        JLabel tituloDescripcion= new JLabel("Escriba Descripción:");
+        tituloDescripcion = new JLabel("Escriba Descripción:");
         tituloDescripcion.setBorder(BorderFactory.createEmptyBorder( 30,0, 0, 0));
         panelDescripcionSuperior.add(tituloDescripcion);
         
         panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(30,panelDescripcionSuperior.getHeight())));
         
-        JButton agregarDescripcion = new JButton("INSERTAR Descripción");
-        agregarDescripcion.setBackground(new Color(184,255,181));
-        agregarDescripcion.setBorder(BorderFactory.createEmptyBorder( 10, 8, 10, 8));
-        panelDescripcionSuperior.add(agregarDescripcion);
+        BotonagregarDescripcion = new JButton("INSERTAR Descripción");
+        BotonagregarDescripcion.setBackground(new Color(184,255,181));
+        BotonagregarDescripcion.setBorder(BorderFactory.createEmptyBorder( 10, 8, 10, 8));
+        panelDescripcionSuperior.add(BotonagregarDescripcion);
         panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(35,panelDescripcionSuperior.getHeight())));
         
          JSeparator separator5 = new JSeparator(1);
@@ -371,16 +367,16 @@ public class VistaBBDD_Insertar extends JFrame {
     
         
         
-        JButton limpiarPantalla = new JButton("Limpiar Pantalla");
-        limpiarPantalla.setBackground(new Color(255,253,160));
-        limpiarPantalla.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
-        panelDescripcionSuperior.add(limpiarPantalla);
+        BotonlimpiarPantalla = new JButton("Limpiar Pantalla");
+        BotonlimpiarPantalla.setBackground(new Color(255,253,160));
+        BotonlimpiarPantalla.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
+        panelDescripcionSuperior.add(BotonlimpiarPantalla);
         panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(20,panelDescripcionSuperior.getHeight())));
         
-        JButton salir = new JButton("SALIR");
-        salir.setBackground(new Color(255,156,154));
-        salir.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
-        panelDescripcionSuperior.add(salir);
+        Botonsalir = new JButton("SALIR");
+        Botonsalir.setBackground(new Color(255,156,154));
+        Botonsalir.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
+        panelDescripcionSuperior.add(Botonsalir);
         
         
         panelDescripcionSuperior.add(Box.createHorizontalGlue());
@@ -399,20 +395,8 @@ public class VistaBBDD_Insertar extends JFrame {
           //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
          scroll.setBorder(BorderFactory.createEmptyBorder( 2,10, 10, 10));
         panelDescripcion.add(scroll); 
-                
-        
-        
-    //    TextArea_existentes.setLineWrap(true); //Haciendo que se haga salto de linea al llegar al final
-       // TextArea_existentes.setWrapStyleWord(true);
-        //Agregamos TEXTAREA al Scroll, como textArea está agregado a Scroll, será a este al que AGREGEMOS y ASIGNEMOS el tamaño mas abajo
-
-        //Inicializamos los componentes del PopUp-menu
-
-            
-        
-          //Menú POP-UP AGREGANDO Botones al PopupMenu
-
-
+                  
+  
        
         
         //Agregamos el PopUpMenu al TextArea
@@ -447,13 +431,7 @@ public class VistaBBDD_Insertar extends JFrame {
         
           
                    
-        //JPOPUPMENU Agregamos a los botones el JPopupMenu su correspondiente Listener
-      pop_Rehacer.addActionListener(new OyentePopRehacer());
-      pop_Deshacer.addActionListener(new OyentePopDeshacer());        
-      pop_Copiar.addActionListener(new OyentePopCopiar());
-      pop_Cortar.addActionListener(new OyentePopCortar());
-      pop_Pegar.addActionListener(new OyentePopPegar());
-      pop_Imprimir.addActionListener(new OyentePopImprimir());
+
 
         
       //          setResizable(false);
@@ -469,85 +447,12 @@ public class VistaBBDD_Insertar extends JFrame {
         // this.setLocationRelativeTo(null);        
 
     }//Fin de iniciAR
+
     
     
+
     
-    
-    ////////////////////////////////////////////////////////////////////////////////    
-///////////////////  POP-UP MENU  //////////////////////////////////////////////
-////////////CONFIGURARÉ LOS OYENTES DEL JPOPUPMENU EN ESTA MISMA CLASE//////////   
-    ////////////////////////////////////////////////////////////////////////////////   
-    class OyentePopRehacer implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
-           if(manager.canRedo())
-                manager.redo();
-        }//Fin action performed
-    }//Fin del OyenteCOPIAR
-    
-    
-    ////////////////////////////////////////////////////////////////////////////////   
-    class OyentePopDeshacer implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
-            if(manager.canUndo())
-                manager.undo();
-            
-        }//Fin action performed
-    }//Fin del OyenteCOPIAR
-    
-    
-    class OyentePopCopiar implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
-            
-            textArea.copy();
-        }//Fin action performed
-    }//Fin del OyenteCOPIAR
-
-////////////////////////////////////////////////////////////////////////////////   
-    class OyentePopCortar implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
-
-            textArea.cut();
-        }//Fin action performed
-    }//Fin del OyenteCOPIAR
-
-////////////////////////////////////////////////////////////////////////////////   
-    class OyentePopPegar implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
-            textArea.paste();
-        }//Fin action performed
-    }//Fin del OyenteCOPIAR
-
-
-
-    ////////////////////////////////////////////////////////////////////////////////   
-    class OyentePopImprimir implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-            try {
-                //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
-                textArea.print();
-            } catch (PrinterException ex) {
-                 JOptionPane.showMessageDialog(null, "Se produjo un error de impresión", "Error de Impresión", JOptionPane.ERROR_MESSAGE);
-            }
-        }//Fin action performed
-    }//Fin del OyenteCOPIAR
-    
+ 
 
     
     

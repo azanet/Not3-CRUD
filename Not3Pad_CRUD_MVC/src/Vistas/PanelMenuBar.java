@@ -32,7 +32,7 @@ public class PanelMenuBar extends JPanel {
    public JMenu archivo,edicion,imprimir,bbdd,ayuda,personalizar;
     public JMenuItem nuevo;
     public JMenuItem abrir,guardar,guardarComo, renombrar, ir_A,deshacer,rehacer, copiar,pegar,cortar,insertarFecha,buscar,buscarYreemplazar,imprimir_configurando,imprimir_directo, salir, acercaDe;
-    public JCheckBox insertar,consultar,modificar,eliminar;
+    public static JCheckBox insertar,consultar,modificar,eliminar;
     public JMenuItem colorBackground, colorFuente, colorSeleccion, colorTextoSeleccionado;
     public JComboBox comboBox,comboBoxStyle ;
     
@@ -109,7 +109,7 @@ public class PanelMenuBar extends JPanel {
      
      
        //Agregamos la MenuBar al panel
-      this.add(menuBar);
+     
        
       //Configuraremos el LAYOUT del MENUBAR a mano, para que los botones queden bién y no se redimensionen
      //  menuBar.setLayout(null); 
@@ -187,6 +187,10 @@ public class PanelMenuBar extends JPanel {
      
         //Menú Ayuda
        ayuda.add(acercaDe);
+       
+       
+        this.add(menuBar);
+       
     }//Fin del metodo INICIAR
     
     //NO SE ASIGNARÁ TAMAÑO AL PANEL, PARA QUE SE ADAPTE AL JFRAME

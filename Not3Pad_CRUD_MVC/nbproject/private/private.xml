@@ -4,7 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/davidf/Escritorio/Not3Pad_Tabbed/src/Vistas/VistaBBDD_Insertar.java</file>
-            <file>file:/home/davidf/Escritorio/Not3Pad_Tabbed/src/not3pad/not3Pad.java</file>
+            <file>file:/home/davidf/Escritorio/Not3Pad_Tabbed/src/Modelo/MetodosBBDD_Consultas.java</file>
+            <file>file:/home/davidf/Escritorio/Not3Pad_Tabbed/src/Vistas/VistaPrincipal.java</file>
+            <file>file:/home/davidf/Escritorio/Not3Pad_Tabbed/src/Controlador/ControladorBBDD_Insertar.java</file>
         </group>
     </open-files>
 </project-private>

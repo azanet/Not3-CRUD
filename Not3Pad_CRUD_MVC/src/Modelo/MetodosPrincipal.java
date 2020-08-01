@@ -46,7 +46,7 @@ public class MetodosPrincipal {
             e.getMessage();
         }
         return archivo;
-
+        
     }//FFin del metodo ABRIR
 
     ////////////////////////////////////////////////////////////////////////////////  

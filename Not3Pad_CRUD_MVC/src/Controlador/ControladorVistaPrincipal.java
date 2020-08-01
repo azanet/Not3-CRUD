@@ -94,7 +94,7 @@ public class ControladorVistaPrincipal {
         this.panelPestanias = new Panel_Pestanias();
         this.fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(); //Estos métodos rellenarán el Array con los estilos de texto disponibles en nuestro sistema
         vistaInsertar = new VistaBBDD_Insertar();
-        
+       ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar); 
         
                //Confiduramos el layout del panelMenuBar a Border, y agregamos los paneles
         vistaPrincipal.panelBase.setLayout(new BorderLayout());
@@ -341,15 +341,13 @@ public class ControladorVistaPrincipal {
 
         @Override
         public void itemStateChanged(ItemEvent ie) {  
+           
+            
             if (panelMenuBar.insertar.isSelected()){
                 
                 
                 
-                try {
-                    ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar);
-                } catch (SQLException ex) {
-                    Logger.getLogger(ControladorVistaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-                }
+          //      ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar);
                 vistaInsertar.setVisible(true);
                 vistaInsertar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.insertar));
                  
@@ -553,7 +551,7 @@ public class ControladorVistaPrincipal {
              panelTA.fichero = metodosPrincipal.Guardar(panelTA.fichero, texto);
              JOptionPane.showMessageDialog(panelTA.textArea, "El ARCHIVO fue GUARDADO con Éxito", "Archivo Guardado", JOptionPane.INFORMATION_MESSAGE);
         
-            }catch(Exception e){
+            }catch(HeadlessException e){
             JOptionPane.showMessageDialog(panelTA.textArea, "El ARCHIVO NO fue guardado ", "ERROR", JOptionPane.INFORMATION_MESSAGE);
            
             }
@@ -645,9 +643,6 @@ public class ControladorVistaPrincipal {
         
         }catch (HeadlessException | NumberFormatException e){
             JOptionPane.showMessageDialog(panelTA.textArea, "Introduzca solo Números", "ERROR de Entrada", JOptionPane.ERROR_MESSAGE);
-    
-        }catch (Exception e){
-             JOptionPane.showMessageDialog(panelTA.textArea, "La LINEA indicada NO EXISTE.", "ERROR de Nº de LINEA ", JOptionPane.ERROR_MESSAGE);
     
         }
         }//Fin action performed

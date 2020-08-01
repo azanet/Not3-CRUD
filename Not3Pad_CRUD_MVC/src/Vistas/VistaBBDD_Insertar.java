@@ -10,19 +10,12 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -44,7 +37,7 @@ import javax.swing.undo.UndoManager;
  *
  * @author davidf
  */
-public class VistaBBDD_Insertar extends JDialog{
+public class VistaBBDD_Insertar extends JFrame{
 
     //Establecemos un objeto de "dimension", que le pasaremos al metodo
     //"setMinimunSize() para establecer el tamaño mínimo que podrá tener nuestra aplicación
@@ -131,7 +124,7 @@ public class VistaBBDD_Insertar extends JDialog{
         //Panel que contendra los paneles de GRUPOS,ARTICULOS
         panelFormularios= new JPanel();
         panelFormularios.setLayout(new BoxLayout(panelFormularios, BoxLayout.Y_AXIS)); //Indicamos qu elos agregue hacia ABAJO
-      
+        
         
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
         //Creamos PANEL en el que se alojaran los PANELES QUE CONFORMAN las OPCIONES y textos de GRUPOS
@@ -139,6 +132,7 @@ public class VistaBBDD_Insertar extends JDialog{
         panelGrupos.setLayout(new BoxLayout(panelGrupos, BoxLayout.X_AXIS));//Indicamos que los agregue hacia LA DERECHA
         //Creamos un area vacía de 20px al principio de este contenedor (en la izquierda), para dejar un espacio (por estetica)
         panelGrupos.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
+        panelGrupos.add(Box.createHorizontalGlue()); 
     
         
     //----------------------------------------------------------------------------------------------------------------------------------------    
@@ -148,7 +142,7 @@ public class VistaBBDD_Insertar extends JDialog{
        
         
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
-        tituloComboboxGrupo = new JLabel("Seleccione GRUPO    ");
+        tituloComboboxGrupo = new JLabel("Seleccione GRUPO "+((char)9660)+"    ");
         //Alineamos la eqtiqueta a la IZQUIERDA
         tituloComboboxGrupo.setAlignmentX(LEFT_ALIGNMENT); 
         //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
@@ -178,7 +172,7 @@ public class VistaBBDD_Insertar extends JDialog{
         panelGrupos.add(panelGrupoIzquierda);
         
         //Creamos un AreaRigida, para que cuando se encoja la pantalla, quede el mismo borde que pusimos al inicio y se vea bonito
-        panelGrupos.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
+      //  panelGrupos.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
         //Agregamos un separador entre los dos paneles GRUPOS poara separarlos y que se vea mejor
         JSeparator separator2 = new JSeparator(1);//Al llamar al separador utilizando 1 en el constructor, le indicamos que el separador estará en VERTICAL
           separator2.setSize(2,0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
@@ -241,7 +235,7 @@ public class VistaBBDD_Insertar extends JDialog{
         panelArticulos.setLayout(new BoxLayout(panelArticulos, BoxLayout.X_AXIS));//Indicamos que los agregue hacia LA DERECHA
         //Creamos un area vacía de 20px al principio de este contenedor (en la izquierda), para dejar un espacio (por estetica)
          panelArticulos.add(Box.createRigidArea(new Dimension(20, panelArticulos.getHeight())));
-    
+         panelArticulos.add(Box.createHorizontalGlue()); 
         
     //----------------------------------------------------------------------------------------------------------------------------------------    
         //Creamos el PANEL ARTICULO-IZQUIERDA, el cual contendrŕa un combobox para escoger grupo y una etiqueta para indicar para que sirve
@@ -250,7 +244,7 @@ public class VistaBBDD_Insertar extends JDialog{
        
         
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
-        tituloComboboxArticulo = new JLabel("Seleccione ARTICULO");
+        tituloComboboxArticulo = new JLabel("Seleccione ARTICULO "+((char)9660));
         //Alineamos la eqtiqueta a la IZQUIERDA
         tituloComboboxArticulo.setAlignmentX(LEFT_ALIGNMENT); 
         //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
@@ -280,7 +274,7 @@ public class VistaBBDD_Insertar extends JDialog{
         panelArticulos.add(panelArticuloIzquierda);
         
         //Creamos un AreaRigida, para que cuando se encoja la pantalla, quede el mismo borde que pusimos al inicio y se vea bonito
-        panelArticulos.add(Box.createRigidArea(new Dimension(20,panelArticulos.getHeight())));
+   //     panelArticulos.add(Box.createRigidArea(new Dimension(20,panelArticulos.getHeight())));
         //Agregamos un separador entre los dos paneles GRUPOS poara separarlos y que se vea mejor
         JSeparator separator3 = new JSeparator(1);//Al llamar al separador utilizando 1 en el constructor, le indicamos que el separador estará en VERTICAL
           separator3.setSize(2,0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
@@ -339,19 +333,27 @@ public class VistaBBDD_Insertar extends JDialog{
         
          panelDescripcion = new JPanel();
         panelDescripcion.setLayout(new BoxLayout(panelDescripcion, BoxLayout.Y_AXIS));
-        
+        panelDescripcion.add(Box.createHorizontalGlue()); 
           
          panelDescripcionSuperior = new JPanel();
          panelDescripcionSuperior.setLayout(new BoxLayout( panelDescripcionSuperior , BoxLayout.X_AXIS));//Indicamos qu elos agregue hacia a la DERECHA
+         //Le agregamos PEGAMENTO, para que se estire y quede centrado cuando redimensione
+      
          panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(panelDescripcionSuperior.getWidth(),40)));
         panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(10,panelDescripcionSuperior.getHeight())));
         //Inicializando CAMPOS y AREA de Texto (aqui indicaremos lo que queremos que tenga escrito dentro el campo, EN MI CASO ESTARAN VACIOS)
-   
-        tituloDescripcion = new JLabel("Escriba Descripción:");
-        tituloDescripcion.setBorder(BorderFactory.createEmptyBorder( 30,0, 0, 0));
+        
+        
+        
+                
+        tituloDescripcion = new JLabel("Ingrese Descripción:");
+        tituloDescripcion.setBorder(BorderFactory.createEmptyBorder( 30,8, 0, 0));
         panelDescripcionSuperior.add(tituloDescripcion);
         
+        //Creamos area rigida para que se mantenga FIJO en la misma posicion aunque redimensionemos
         panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(30,panelDescripcionSuperior.getHeight())));
+        //Le agregamos PEGAMENTO, para que se estire y quede centrado cuando redimensione MENOS EL "INGRESE DESCRIPCION"
+        panelDescripcionSuperior.add(Box.createHorizontalGlue()); 
         
         BotonagregarDescripcion = new JButton("INSERTAR Descripción");
         BotonagregarDescripcion.setBackground(new Color(184,255,181));
@@ -377,8 +379,8 @@ public class VistaBBDD_Insertar extends JDialog{
         Botonsalir.setBackground(new Color(255,156,154));
         Botonsalir.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
         panelDescripcionSuperior.add(Botonsalir);
-        
-        
+        //Agregamos un area fija, para que quede centrado en el sitio que debe ir y le agregamos Pegamento para la redimension
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(450,panelDescripcionSuperior.getHeight())));
         panelDescripcionSuperior.add(Box.createHorizontalGlue());
         
         panelDescripcion.add( panelDescripcionSuperior);
@@ -393,8 +395,8 @@ public class VistaBBDD_Insertar extends JDialog{
         
         scroll= new JScrollPane(textArea);//Agregando SCROLL a TextArea
           //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
-         scroll.setBorder(BorderFactory.createEmptyBorder( 2,10, 10, 10));
-        panelDescripcion.add(scroll); 
+         scroll.setBorder(BorderFactory.createEmptyBorder( 2,15, 15, 15));
+         panelDescripcion.add(scroll); 
                   
   
        

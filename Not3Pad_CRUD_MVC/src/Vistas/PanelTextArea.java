@@ -5,11 +5,13 @@
  */
 package Vistas;
 
+import Modelo.TextLineNumber;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
 import java.io.File;
+import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -53,6 +55,10 @@ public class PanelTextArea extends JPanel{
         //Instanciamos el TextArea y lo agregamos al ScrollPane
         textArea = new JTextArea();
         scrollPane = new JScrollPane(textArea);
+        TextLineNumber tln = new TextLineNumber(textArea);
+        scrollPane.setRowHeaderView( tln );
+                        //creamos un borde vacío, por estetica arriba,izquierda,abajo,derecha 
+   //     scrollPane.setBorder(BorderFactory.createEmptyBorder( 0,10, 5, 10)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
         //Instanciamos el Popup y los menus
         popMenu = new JPopupMenu();
         pop_Rehacer = new JMenuItem("Rehacer");
@@ -64,9 +70,9 @@ public class PanelTextArea extends JPanel{
  
         //Activamos el textArea para que se muestren los colores
         textArea.setOpaque(true);
-        
-        //Agregamos TextArea a la capa.
+         //Agregamos TextArea a la capa.
         add(scrollPane, BorderLayout.CENTER);
+        
 
         //Menú POP-UP AGREGANDO Botones al PopupMenu
         
@@ -98,8 +104,15 @@ public class PanelTextArea extends JPanel{
         boolean exist = false;
         int i = contador;
      
+        
         //Inicializamos el FICHERO/ARCHIVO
+        if (contador==0){
+        fichero = new File("Archivo_nuevo.txt");
+        }else{
         fichero = new File("Archivo_nuevo(" + i + ").txt");
+        }
+        
+   
          do {
             if (fichero.exists()) {
                 nombre_fic = "Archivo_nuevo(" + i + ").txt";

@@ -35,19 +35,21 @@ public class MetodosBBDD_Consultas {
      
 
     private void Conexion1() {
+       if(BBDD_Error==false){
         try {
             //LE INDICAMOS CUAL ES EL DRIVER
             Class.forName("com.mysql.cj.jdbc.Driver");
             //Con este objeto de Connection y utilizando "getConnection" que lleva 3 parametros, le indicamos la bbdd a conectar, usuario y contraseña
             String url = "jdbc:mysql://127.0.0.1:3306/Not3Pad?verifyServerCertificate=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-            this.con = DriverManager.getConnection(url, "USER", "PASSWORD");//Nombre de Uuario y contraseña asignadas a la BBDD 
+            this.con = DriverManager.getConnection(url, "not3pad", "admin");//Nombre de Uuario(not3pad) y contraseña(admin) asignadas a la BBDD 
             BBDD_Error=false;
         
         } catch (ClassNotFoundException | SQLException e) {
             BBDD_Error=true;
            JOptionPane.showMessageDialog(null, ("Error " + e), "Failure", JOptionPane.ERROR_MESSAGE);
         }//Fin del try catch
-
+       
+       }
     }//Fin del CONSTRUCTOR
     
 

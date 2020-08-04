@@ -23,15 +23,12 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
 import static java.awt.image.ImageObserver.HEIGHT;
 import java.awt.print.PrinterException;
 import java.io.File;
@@ -39,18 +36,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.time.LocalTime;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
-import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
+import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Caret;
@@ -62,17 +54,19 @@ import javax.swing.text.Caret;
 public class ControladorVistaPrincipal {
 
     //Declarando OBJETOS de VistaPrincipal(el marco de la aplicación) y los Metodos(modelo)
-    private VistaPrincipal vistaPrincipal;
+    private final VistaPrincipal vistaPrincipal;
     private final MetodosPrincipal metodosPrincipal;
     //Declarando OBJETOS de PANELES QUE CONFORMA LA VistaPrincipal
     public PanelMenuBar panelMenuBar; //Panel que contiene el JMenuBar
     public static Panel_Pestanias panelPestanias; //Panel que contiene el JTabbedPane
     public PanelTextArea panelTA; //este pane lo utilizaremos para recuperar el PANELTEXTAREA (que está contenida en algunas pestañas) que corresponda a la pestaña que hemos seleccionado
+    public static JTextArea texAreaExportar; //este AREA, lse usará para recuperar el contenido de la consulta realizada, y que pueda recogerse para insertarla en la pestaña que este vigente, si se desea
+    public static JButton ExportarConsultaAPestania; //este Boton, lse usará para recuperar el contenido de la consulta realizada, y que pueda recogerse para insertarla en la pestaña que este vigente, si se desea
       
-    private VistaBBDD_Insertar vistaInsertar;       
-    private VistaBBDD_Consultar vistaConsultar;
-    private VistaBBDD_Modificar vistaModificar;
-    private VistaBBDD_Eliminar vistaEliminar;
+    private final VistaBBDD_Insertar vistaInsertar;       
+    private final VistaBBDD_Consultar vistaConsultar;
+    private final VistaBBDD_Modificar vistaModificar;
+    private final VistaBBDD_Eliminar vistaEliminar;
 
 
     //Declarando objetos y variables necesarias para poder cambiar el estilo y formato de los TextArea
@@ -87,16 +81,33 @@ public class ControladorVistaPrincipal {
     Color colorTextoSeleccionado;
     int indexPestana; //En esta variable iremos almacenando el INDEX de la pestaña en la que nos encontramos
 
+    
     public ControladorVistaPrincipal(VistaPrincipal vistaPrincipal, MetodosPrincipal metodosPrincipal) {
         this.vistaPrincipal = vistaPrincipal;
         this.metodosPrincipal = metodosPrincipal;
         this.panelMenuBar = new PanelMenuBar();
         this.panelPestanias = new Panel_Pestanias();
         this.fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(); //Estos métodos rellenarán el Array con los estilos de texto disponibles en nuestro sistema
-        vistaInsertar = new VistaBBDD_Insertar();
-       ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar); 
+        this.ExportarConsultaAPestania= new JButton("Exportar a Pestaña");
+        this.texAreaExportar= new JTextArea("");
         
-               //Confiduramos el layout del panelMenuBar a Border, y agregamos los paneles
+        //INICIALIZANDO VISTAS Y CONTROLADORES DE LAS CONSULTAS, PASAR A UNA FUNCION SOLA, QUE SEA LLAMADA UNA SOLA VEZ
+        //SE UTILIZARÁ UNA VARIABLE BOOLEANA PARA DETECTAR SI YA SE HA INICIADO POR PRIMERA VEZ,O CORRECTAMENTE
+        vistaInsertar = new VistaBBDD_Insertar();
+        ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar); 
+        vistaConsultar = new VistaBBDD_Consultar();
+        ControladorBBDD_Consultar Controlador_Consultar = new ControladorBBDD_Consultar(vistaConsultar);
+        vistaEliminar = new VistaBBDD_Eliminar();
+        ControladorBBDD_Eliminar Controlador_Eliminar = new ControladorBBDD_Eliminar(vistaEliminar); 
+        vistaModificar = new VistaBBDD_Modificar();
+        ControladorBBDD_Modificar Controlador_Modificar = new ControladorBBDD_Modificar(vistaModificar);
+       
+        /////// FIM DE CONTROLADORES Y VISTAS DE LA BBDD////////////////////////////////////////
+        
+        
+        
+        
+               //Configuramos el layout del panelMenuBar a Border, y agregamos los paneles
         vistaPrincipal.panelBase.setLayout(new BorderLayout());
 
    
@@ -155,6 +166,9 @@ public class ControladorVistaPrincipal {
         //Agregamos OYENTE al JTabbedPane, para saber a qué pestaña ha cambiado (y poder recuperar su componente para trabajar con el o lo que queramos)
         panelPestanias.TP.addChangeListener(new OyenteCambioPestana());
 
+        ExportarConsultaAPestania.addActionListener(new OyenteExportarConsulta());
+        
+        
         //Añadiendo y cargando ComboBox de TAMAÑO LETRA
         for (int i = 0; i < 100; i++) {
             panelMenuBar.comboBox.addItem(i);
@@ -190,6 +204,7 @@ public class ControladorVistaPrincipal {
         vistaPrincipal.setLocationRelativeTo(null);
         //Hacemos visible la vista Principal      
         vistaPrincipal.setVisible(true);
+        panelPestanias = panelPestanias.PestaniaTextoNueva();
         
     }//Fin de iniciar
 
@@ -313,10 +328,7 @@ public class ControladorVistaPrincipal {
         public void actionPerformed(ActionEvent ae) {
             //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
 
-            //Creando objeto de PanelTextAREA QUE APUNTA  al PanelTextArea que tenemos en LA PESTAÑA ACTUAL
-            //Por lo tanto estaremos actuando directamente en la pestaña seleccionada
-            //  PanelTextArea panelTA = (PanelTextArea) panelPestanias.TP.getSelectedComponent();
-            //Almacenamos los datos del combobox en la variable instanciada, para utilizarla cuando sea necesario
+            //Recogemos el estilo que el usuario elija en el panel, para SETEAR nuestro textArea con esa opción
             nombre_fuente = panelMenuBar.comboBoxStyle.getSelectedItem().toString();
 
             fuente = new Font(nombre_fuente, Font.PLAIN, tamanio_fuente);
@@ -330,6 +342,16 @@ public class ControladorVistaPrincipal {
 
     
 
+  class OyenteExportarConsulta implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            
+            //Agregamos a nuestra pestaña actual el area de texto recogida en el TextArea Estático (que solo se encuentra en CONSULTA)
+            panelTA.textArea.append(texAreaExportar.getText());
+        }
+            
+  }
         
 
 
@@ -345,9 +367,6 @@ public class ControladorVistaPrincipal {
             
             if (panelMenuBar.insertar.isSelected()){
                 
-                
-                
-          //      ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar);
                 vistaInsertar.setVisible(true);
                 vistaInsertar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.insertar));
                  
@@ -370,8 +389,7 @@ public class ControladorVistaPrincipal {
             
           if (panelMenuBar.consultar.isSelected()){
                 
-                vistaConsultar = new VistaBBDD_Consultar();
-                 ControladorBBDD_Consultar Controlador_Consultar = new ControladorBBDD_Consultar(vistaConsultar);
+              
                vistaConsultar.setVisible(true);
                 vistaConsultar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.consultar));
                 
@@ -396,9 +414,6 @@ public class ControladorVistaPrincipal {
           if (panelMenuBar.modificar.isSelected()){
                 
                 
-                
-                vistaModificar = new VistaBBDD_Modificar();
-                 ControladorBBDD_Modificar Controlador_Modificar = new ControladorBBDD_Modificar(vistaModificar);
                 vistaModificar.setVisible(true);
                 vistaModificar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.modificar));
                
@@ -422,8 +437,6 @@ public class ControladorVistaPrincipal {
           
           if (panelMenuBar.eliminar.isSelected()){
                 
-                 vistaEliminar = new VistaBBDD_Eliminar();
-                  ControladorBBDD_Eliminar Controlador_Eliminar = new ControladorBBDD_Eliminar(vistaEliminar); 
                 vistaEliminar.setVisible(true);
                 vistaEliminar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.eliminar));
                 
@@ -488,7 +501,8 @@ public class ControladorVistaPrincipal {
         @Override
         public void actionPerformed(ActionEvent ae) {
             //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
-
+            
+            //Ejecutamos el metodo pestaña nueva y RECIBIMOS un OBJETO de panelPestanias, que sustituirá al existente
             panelPestanias = panelPestanias.PestaniaTextoNueva();
             //JPOPUPMENU Agregamos los botones el JPopupMenu y les pasamos su correspondiente Listener
             panelPestanias.TP.setSelectedIndex( panelPestanias.TP.getTabCount()-1);
@@ -517,6 +531,7 @@ public class ControladorVistaPrincipal {
             //Reconfiguramos el titulo de la pestaña y le agregamos el boton correspondiente
             String title=panelTA.fichero.getName();
             panelPestanias.TP.setTitleAt(panelPestanias.TP.getTabCount()-1, title);
+            //Le pasamos el metodo SETTABCOMPONENT que nos permite modificar la pestaña, y utilizamos el metodo estatico contenido en Panel_pestanias,"Cross" que lo que hará será añadir un icono a la pestaña, dotandola con la propiedad de poder cerrarla
             panelPestanias.TP.setTabComponentAt(panelPestanias.TP.getTabCount()-1, new Panel_Pestanias.Cross(title)); //agrega titulo y boton X.
             
             //COmprobamos si el archivo contiene algo escrito y si lo hay, lo escribiremos en el TextArea

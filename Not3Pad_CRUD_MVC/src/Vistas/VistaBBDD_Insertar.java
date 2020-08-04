@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -142,11 +143,11 @@ public class VistaBBDD_Insertar extends JFrame{
        
         
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
-        tituloComboboxGrupo = new JLabel("Seleccione GRUPO "+((char)9660)+"    ");
+        tituloComboboxGrupo = new JLabel("Seleccione GRUPO "+((char)9660));
         //Alineamos la eqtiqueta a la IZQUIERDA
         tituloComboboxGrupo.setAlignmentX(LEFT_ALIGNMENT); 
         //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
-         tituloComboboxGrupo.setBorder(BorderFactory.createEmptyBorder( 10,0, 5, 130)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
+         tituloComboboxGrupo.setBorder(BorderFactory.createEmptyBorder( 10,0, 5,0)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
         
         //Añadimos el TituloDelCombobox a este PANEL (GRUPO-IZQUIERDA)
          panelGrupoIzquierda.add(tituloComboboxGrupo);
@@ -154,10 +155,10 @@ public class VistaBBDD_Insertar extends JFrame{
         //Procedemos a crear nuestro COMBOBOX de GRUPOS
        comboGrupos = new JComboBox();
         //Le asignamos tamaño 
-        comboGrupos.setSize(new Dimension(250, 30));
+        comboGrupos.setPreferredSize(new Dimension(350, 30));
         //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
-        comboGrupos.setMaximumSize(new Dimension(250, 30));
-        comboGrupos.setMinimumSize(new Dimension(250, 30));
+        comboGrupos.setMaximumSize(new Dimension(350, 30));
+        comboGrupos.setMinimumSize(new Dimension(350, 30));
      
         
        
@@ -172,7 +173,7 @@ public class VistaBBDD_Insertar extends JFrame{
         panelGrupos.add(panelGrupoIzquierda);
         
         //Creamos un AreaRigida, para que cuando se encoja la pantalla, quede el mismo borde que pusimos al inicio y se vea bonito
-      //  panelGrupos.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
+        panelGrupos.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
         //Agregamos un separador entre los dos paneles GRUPOS poara separarlos y que se vea mejor
         JSeparator separator2 = new JSeparator(1);//Al llamar al separador utilizando 1 en el constructor, le indicamos que el separador estará en VERTICAL
           separator2.setSize(2,0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
@@ -197,10 +198,10 @@ public class VistaBBDD_Insertar extends JFrame{
         panelGrupoDerecha.add(tituloGrupoNuevo); 
         
          
-         textFieldGrupoNuevo = new JTextField(50);
-         textFieldGrupoNuevo.setSize(new Dimension(150, 30));
+         textFieldGrupoNuevo = new JTextField(38);
+         textFieldGrupoNuevo.setPreferredSize(new Dimension(350, 30));
             //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
-      textFieldGrupoNuevo.setMaximumSize(new Dimension(400, 30));
+      textFieldGrupoNuevo.setMaximumSize(new Dimension(350, 30));
          textFieldGrupoNuevo.setAlignmentX(LEFT_ALIGNMENT); 
          panelGrupoDerecha.add(textFieldGrupoNuevo);
                //Agregaremos un AreaRigida de unos cuantros Pixeles, para darle un poco de espacio entre el siguiente elemento que se agregue
@@ -248,7 +249,7 @@ public class VistaBBDD_Insertar extends JFrame{
         //Alineamos la eqtiqueta a la IZQUIERDA
         tituloComboboxArticulo.setAlignmentX(LEFT_ALIGNMENT); 
         //Establecemos un borde espaciado VACIO  arriba,izquierda,abajo,derecha 
-         tituloComboboxArticulo.setBorder(BorderFactory.createEmptyBorder( 10,0, 5, 131)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
+         tituloComboboxArticulo.setBorder(BorderFactory.createEmptyBorder( 10,0, 5,0)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
       
         //Añadimos el TituloDelCombobox a este PANEL (ARTICULO-IZQUIERDA)
           panelArticuloIzquierda.add(tituloComboboxArticulo);
@@ -256,10 +257,10 @@ public class VistaBBDD_Insertar extends JFrame{
         //Procedemos a crear nuestro COMBOBOX de GRUPOS
          comboArticulos = new JComboBox();
         //Le asignamos tamaño 
-        comboArticulos.setSize(new Dimension(250, 30));
+        comboArticulos.setPreferredSize(new Dimension(350, 30));
         //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
-        comboArticulos.setMaximumSize(new Dimension(250, 30));
-        comboArticulos.setMinimumSize(new Dimension(250, 30));
+        comboArticulos.setMaximumSize(new Dimension(350, 30));
+        comboArticulos.setMinimumSize(new Dimension(350, 30));
      
         
        
@@ -274,7 +275,7 @@ public class VistaBBDD_Insertar extends JFrame{
         panelArticulos.add(panelArticuloIzquierda);
         
         //Creamos un AreaRigida, para que cuando se encoja la pantalla, quede el mismo borde que pusimos al inicio y se vea bonito
-   //     panelArticulos.add(Box.createRigidArea(new Dimension(20,panelArticulos.getHeight())));
+       panelArticulos.add(Box.createRigidArea(new Dimension(20,panelArticulos.getHeight())));
         //Agregamos un separador entre los dos paneles GRUPOS poara separarlos y que se vea mejor
         JSeparator separator3 = new JSeparator(1);//Al llamar al separador utilizando 1 en el constructor, le indicamos que el separador estará en VERTICAL
           separator3.setSize(2,0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
@@ -299,10 +300,10 @@ public class VistaBBDD_Insertar extends JFrame{
         panelArticuloDerecha.add(tituloArticuloNuevo); 
         
          
-         textFieldArticuloNuevo = new JTextField(50);
-         textFieldArticuloNuevo.setSize(new Dimension(150, 30));
+         textFieldArticuloNuevo = new JTextField(38);
+         textFieldArticuloNuevo.setPreferredSize(new Dimension(350, 30));
             //Le asignamos tamaño Maximo (para que pueda redimensionarse un poco)
-      textFieldArticuloNuevo.setMaximumSize(new Dimension(400, 30));
+      textFieldArticuloNuevo.setMaximumSize(new Dimension(350, 30));
          textFieldArticuloNuevo.setAlignmentX(LEFT_ALIGNMENT); 
          panelArticuloDerecha.add(textFieldArticuloNuevo);
                //Agregaremos un AreaRigida de unos cuantros Pixeles, para darle un poco de espacio entre el siguiente elemento que se agregue
@@ -316,6 +317,7 @@ public class VistaBBDD_Insertar extends JFrame{
        panelArticuloDerecha.add(Box.createRigidArea(new Dimension(panelArticulos.getWidth(),10)));
           
           panelArticulos.add(panelArticuloDerecha);
+          
         panelArticulos.add(Box.createRigidArea(new Dimension(20,panelArticulos.getHeight())));
            panelArticulos.add(Box.createHorizontalGlue()); 
         
@@ -351,13 +353,13 @@ public class VistaBBDD_Insertar extends JFrame{
         panelDescripcionSuperior.add(tituloDescripcion);
         
         //Creamos area rigida para que se mantenga FIJO en la misma posicion aunque redimensionemos
-        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(30,panelDescripcionSuperior.getHeight())));
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(57,panelDescripcionSuperior.getHeight())));
         //Le agregamos PEGAMENTO, para que se estire y quede centrado cuando redimensione MENOS EL "INGRESE DESCRIPCION"
         panelDescripcionSuperior.add(Box.createHorizontalGlue()); 
         
         BotonagregarDescripcion = new JButton("INSERTAR Descripción");
         BotonagregarDescripcion.setBackground(new Color(184,255,181));
-        BotonagregarDescripcion.setBorder(BorderFactory.createEmptyBorder( 10, 8, 10, 8));
+        BotonagregarDescripcion.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
         panelDescripcionSuperior.add(BotonagregarDescripcion);
         panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(35,panelDescripcionSuperior.getHeight())));
         
@@ -365,8 +367,8 @@ public class VistaBBDD_Insertar extends JFrame{
            separator5.setSize(2,0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
           separator5.setMaximumSize(new Dimension(2,600));
         panelDescripcionSuperior.add( separator5);
-        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(35,panelDescripcionSuperior.getHeight())));
-    
+       panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(165,panelDescripcionSuperior.getHeight())));
+      
         
         
         BotonlimpiarPantalla = new JButton("Limpiar Pantalla");
@@ -378,11 +380,14 @@ public class VistaBBDD_Insertar extends JFrame{
         Botonsalir = new JButton("SALIR");
         Botonsalir.setBackground(new Color(255,156,154));
         Botonsalir.setBorder(BorderFactory.createEmptyBorder( 15, 8, 15, 8));
-        panelDescripcionSuperior.add(Botonsalir);
-        //Agregamos un area fija, para que quede centrado en el sitio que debe ir y le agregamos Pegamento para la redimension
-        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(450,panelDescripcionSuperior.getHeight())));
-        panelDescripcionSuperior.add(Box.createHorizontalGlue());
         
+        //Agregamos un area fija, para que quede centrado en el sitio que debe ir y le agregamos Pegamento para la redimension
+       panelDescripcionSuperior.add(Botonsalir);
+       
+        panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(120,panelDescripcionSuperior.getHeight())));
+        panelDescripcionSuperior.add(Box.createHorizontalGlue());        
+        
+   //      panelDescripcionSuperior.add(Box.createRigidArea(new Dimension(20,panelGrupos.getHeight())));
         panelDescripcion.add( panelDescripcionSuperior);
   //      tituloTA.setBorder(BorderFactory.createEmptyBorder( 10,10, 10, 10));
   
@@ -445,7 +450,7 @@ public class VistaBBDD_Insertar extends JFrame{
        contentPane.add(panelFormularios,BorderLayout.NORTH);
        contentPane.add(panelDescripcion, BorderLayout.CENTER);
                this.setBounds(0,0,600, 600);
-               this.setMinimumSize(new Dimension(600, 600));
+               this.setMinimumSize(new Dimension(854, 600));
         // this.setLocationRelativeTo(null);        
 
     }//Fin de iniciAR

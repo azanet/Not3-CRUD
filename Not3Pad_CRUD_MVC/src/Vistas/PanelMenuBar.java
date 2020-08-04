@@ -32,7 +32,9 @@ public class PanelMenuBar extends JPanel {
    public JMenu archivo,edicion,imprimir,bbdd,ayuda,personalizar;
     public JMenuItem nuevo;
     public JMenuItem abrir,guardar,guardarComo, renombrar, ir_A,deshacer,rehacer, copiar,pegar,cortar,insertarFecha,buscar,buscarYreemplazar,imprimir_configurando,imprimir_directo, salir, acercaDe;
+   //Haremos estos CheckBox estáticos, para poder utilizarlo en las distintas ventanas correspondientes y poder cambiar su valor si el usuario elige salir de estas
     public static JCheckBox insertar,consultar,modificar,eliminar;
+    
     public JMenuItem colorBackground, colorFuente, colorSeleccion, colorTextoSeleccionado;
     public JComboBox comboBox,comboBoxStyle ;
     

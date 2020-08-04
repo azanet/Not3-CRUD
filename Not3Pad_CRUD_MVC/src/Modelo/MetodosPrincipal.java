@@ -5,7 +5,6 @@
  */
 package Modelo;
 
-import Vistas.Panel_Pestanias;
 import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileWriter;
@@ -16,7 +15,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import javax.swing.JFileChooser;
 import static javax.swing.JFileChooser.FILES_ONLY;
-import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -46,7 +44,7 @@ public class MetodosPrincipal {
             e.getMessage();
         }
         return archivo;
-        
+
     }//FFin del metodo ABRIR
 
     ////////////////////////////////////////////////////////////////////////////////  

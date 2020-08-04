@@ -67,7 +67,7 @@ public class ControladorBBDD_Insertar {
         //Cargamos un elemento en el COMBOBOX grupo, y el LISTENER se encargará de lanzar el resto de metodos necesarios para ir cargando los comboboxes en orden para evitar errores 
         vista.comboArticulos.addItem("============>");
         vista.comboGrupos.addItem("============>");
-  
+
     }//Fin del metodo INICIAR
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++    
@@ -76,7 +76,6 @@ public class ControladorBBDD_Insertar {
 
         //SETEANDO LOS COMBOBOX
         ///***CREAR CONSULTA PARA RECUPERAR GRPOS Y ARTICULOS Y ALMACENARLOS EN UN OBEJETO   
-       
         grupos = metodos.LecturaGrupos();
         //Ejecutamos la CONSULTA "LecturaGrupos", la cual nos devolverá un array con los nombre de los grupos existentes
         //Y con esto inicializamos o actualizamos nustras combobox de Grupos
@@ -86,27 +85,23 @@ public class ControladorBBDD_Insertar {
             for (String grupo : grupos) {
                 vista.comboGrupos.addItem(grupo);
             }//Fin del FOR Grupos
-        //Revisaremos se hay alguna opcion elegida en GRUPO, si no la hay, no cargamos el combo de articulos
-        
+            //Revisaremos se hay alguna opcion elegida en GRUPO, si no la hay, no cargamos el combo de articulos
+
         }
-        
-             articulos = metodos.LecturaArticulos((String) vista.comboGrupos.getSelectedItem());
-            vista.comboArticulos.removeAllItems();
-        
 
-              for (String articulo : articulos) {
-                vista.comboArticulos.addItem(articulo);
-            }//Fin del FOR Grupos
-        
+        articulos = metodos.LecturaArticulos((String) vista.comboGrupos.getSelectedItem());
+        vista.comboArticulos.removeAllItems();
 
-    
+        for (String articulo : articulos) {
+            vista.comboArticulos.addItem(articulo);
+        }//Fin del FOR Grupos
+
     }//Fin de REFRESCAR
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++        
     //Este metodo será utilizado para saber si DESBLOQUEAR O NO las opciones siguientes para la consulta
     //ACCIONES NECESARIAS PARA IR DESBLOQUEANDO LOS SIGUIENTES COMBOBOXES
     //PARA DE ESTA FORMA, OBLIGAR AL USUARIO A QUE HAGA LA CONSULTA CORRECTAMENTE
-   
     private void DesbloqueoDeOpcionesGrupo() {
 
         if (grupoSeleccionado > 0) {
@@ -152,8 +147,7 @@ public class ControladorBBDD_Insertar {
             vista.BotonagregarDescripcion.setEnabled(true);
             vista.textArea.setEnabled(true);
 
-         
-         } else if (articuloSeleccionado == 0 && grupoSeleccionado == 0) {
+        } else if (articuloSeleccionado == 0 && grupoSeleccionado == 0) {
             //BLOQEUAR CAMPO DE DESCRIPCION
             vista.tituloArticuloNuevo.setEnabled(false);
             vista.textFieldArticuloNuevo.setEnabled(false);
@@ -161,7 +155,7 @@ public class ControladorBBDD_Insertar {
             vista.tituloDescripcion.setEnabled(false);
             vista.BotonagregarDescripcion.setEnabled(false);
             vista.textArea.setEnabled(false);
-        }else {
+        } else {
             //BLOQEUAR CAMPO DE DESCRIPCION
             vista.tituloArticuloNuevo.setEnabled(true);
             vista.textFieldArticuloNuevo.setEnabled(true);
@@ -169,7 +163,7 @@ public class ControladorBBDD_Insertar {
             vista.tituloDescripcion.setEnabled(false);
             vista.BotonagregarDescripcion.setEnabled(false);
             vista.textArea.setEnabled(false);//Fin del else
-         }
+        }
     }//FIN DE DESBLOQUEO-OPCIONES
 
     ////////////////////////////////////////////////////////////////////////////////    
@@ -315,12 +309,11 @@ public class ControladorBBDD_Insertar {
 
             //Recogemos el INDICE donde se encuentra, para luego poder volver a recuperarlo
             grupoSeleccionado = vista.comboGrupos.getSelectedIndex();
-           
+
             DesbloqueoDeOpcionesArticulo();
             DesbloqueoDeOpcionesGrupo();
-          //  DesbloqueoDeOpcionesArticulo();
-            
-            
+            //  DesbloqueoDeOpcionesArticulo();
+
             RefrescarCombobox();
         }//Fin de la accion sobreescrita
 
@@ -334,10 +327,9 @@ public class ControladorBBDD_Insertar {
         public void actionPerformed(ActionEvent ae) {
 
             articuloSeleccionado = vista.comboArticulos.getSelectedIndex();
-            
+
             DesbloqueoDeOpcionesArticulo();
-          //  DesbloqueoDeOpcionesGrupo();
-           
+            //  DesbloqueoDeOpcionesGrupo();
 
         }//Fin de la accion sobreescrita
 

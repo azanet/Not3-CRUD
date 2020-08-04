@@ -23,37 +23,32 @@ public class VistaPrincipal extends JFrame {
     //"setMinimunSize() para establecer el tamaño mínimo que podrá tener nuestra aplicación
     public static JPanel panelBase;
 
-   
 //Creando constructor
     public VistaPrincipal() {
 
-       // super("Not3Pad");
-      
+        // super("Not3Pad");
         Iniciar();
 
     }
-    
-    private void Iniciar(){
-     //Seteamos TITULO a la ventana principal 
-     Image icono = new ImageIcon(getClass().getResource("/Images/LogoKrazyLab.png")).getImage();
-     setIconImage(icono);
-       setTitle("Not3Pad");
+
+    private void Iniciar() {
+        //Seteamos TITULO a la ventana principal 
+        Image icono = new ImageIcon(getClass().getResource("/Images/LogoKrazyLab.png")).getImage();
+        setIconImage(icono);
+        setTitle("Not3Pad");
         panelBase = new JPanel();
 
-        
         //DESCOMENTANDO ESTAS LINEAS, PODEMOS ESTABLECER UN ESTILO VISUAL DISTINTO PARA NUESTRA APLICACIÓN UTILIZANDO LA LIBRERIA "JTATTOO"
         //EL ESTILO VISUAL HAY QUE SETEARSE ANTES DE MOSTRAR LA VENTANA, O DARÁ ERROR        
-       try{
+        try {
             //Ponemos primero el nombre del paquete, y seguido de este, la clase LookandFeel del estilo que queremos
-     //   UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
-        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        
-        }catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e){
+            //   UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
             JOptionPane.showMessageDialog(null, "Error al intentar establecer el estilo de vista\nSe establecerá el estilo visual por defecto");
         }
-        
-        
-        
+
     }
 
 }//Fin de la vista principal

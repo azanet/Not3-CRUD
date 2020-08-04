@@ -12,7 +12,7 @@ package Modelo;
 public class objetoTablaDescripcion implements Comparable<objetoTablaDescripcion> {
 
     //Estas variables almacenarán la tabla completa RECUPERA DE LA CONSULTA
-    private int ID;
+    private final int ID;
     private String grupo;
     private String articulo;
     private String descripcion;
@@ -29,6 +29,7 @@ public class objetoTablaDescripcion implements Comparable<objetoTablaDescripcion
     public int getID() {
         return ID;
     }
+   
 
     //El resto tiene getters y setters, para poder luego usar este mismo objeto 
     //cuando queramos MODIFICAR el contenido de alguna entrada o cambiarlo de grupo
@@ -61,11 +62,17 @@ public class objetoTablaDescripcion implements Comparable<objetoTablaDescripcion
     //ORDENARÁ POR el ID
     @Override
     public int compareTo(objetoTablaDescripcion t) {
-
-        String aux1 = String.valueOf(this.ID);
-        String aux2 = String.valueOf(t.ID);
-
-        return aux1.compareTo(aux2);
+ 
+        if(this.ID==t.ID){
+            return 0;
+        }else if(this.ID > t.ID ){
+            return 1;
+        }else{
+            return -1;
+        } 
+        
+        
+        
     }//Fin del comparador
 
 }//Fin de la clase OBJETO, COMPARABLE

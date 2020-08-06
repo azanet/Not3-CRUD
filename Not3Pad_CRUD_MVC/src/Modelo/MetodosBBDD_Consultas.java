@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -42,7 +44,7 @@ public class MetodosBBDD_Consultas {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 //Con este objeto de Connection y utilizando "getConnection" que lleva 3 parametros, le indicamos la bbdd a conectar, usuario y contraseña
                 String url = "jdbc:mysql://localhost:3306/Not3Pad?verifyServerCertificate=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-                this.con = DriverManager.getConnection(url, "not3pad", "admin");//Nombre de Uuario(not3pad) y contraseña(admin) asignadas a la BBDD 
+                 this.con = DriverManager.getConnection(url, "not3pad", "admin");//Nombre de Uuario(not3pad) y contraseña(admin) asignadas a la BBDD 
                 BBDD_Error = false;
 
             } catch (ClassNotFoundException | SQLException e) {
@@ -464,5 +466,83 @@ public class MetodosBBDD_Consultas {
         }//Fin del try catch
 
     }
+
+    //////////////////////////////////////////////////////////////////////////////////    
+    //METODO BOTON MODOFOCAR DESCRIPCION (publico y privado)  
+    public boolean ModificarDescripcion(Integer id, String descripcion) {
+
+        if (!BBDD_Error) {
+            return ModificarDescripcionH(id, descripcion);
+        } else {
+            return false;
+        }
+
+    }//Fin 
+
+    private boolean ModificarDescripcionH(Integer id, String descripcion) {
+        // Preparamos la consulta
+        try {
+
+            try (PreparedStatement s1 = this.con.prepareStatement("UPDATE Descripcion SET Descripcion.Texto = ? WHERE Descripcion.id = ?") //Agregando parametros a la posicion correspondiente de la consulta
+                    ) {
+                s1.setString(1, descripcion);
+                s1.setInt(2, id);
+                if (s1.executeUpdate() == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+                //CERRAMOS CONEXION
+
+            }
+
+        } catch (HeadlessException | SQLException e) {
+
+            JOptionPane.showMessageDialog(null, ("Error " + e), "Failure", JOptionPane.ERROR_MESSAGE);
+
+        }//Fin del try catch
+
+        return false;
+
+    }//Fin metodo AltaGrupoH
+
+    //////////////////////////////////////////////////////////////////////////////////    
+    //METODO BOTON ALTA DESCRIPCION (publico y privado)  
+    public String ObtenerDescripcion(Integer id) {
+
+        if (!BBDD_Error) {
+            return ObtenerDescripcionH(id);
+        } else {
+            return "";
+        }
+
+    }//Fin alta artículo
+
+    private String ObtenerDescripcionH(Integer id) {
+        // Preparamos la consulta
+        String ObtenerDescripcion;
+
+        try {
+
+          
+           
+              PreparedStatement s1 = this.con.prepareStatement("SELECT Descripcion.Texto FROM Descripcion WHERE Descripcion.id= ? "); //Agregando parametros a la posicion correspondiente de la consulta
+                s1.setInt(1, id);
+            
+            rs = s1.executeQuery();
+
+            while (rs.next()) {
+                //Creamos objeto tabla Descripcion
+                ObtenerDescripcion = rs.getString("Texto");
+                //Agregamos objeto al TreeSet
+                return ObtenerDescripcion;
+            }
+           
+            } catch (SQLException ex) {
+                Logger.getLogger(MetodosBBDD_Consultas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return "";
+
+    }//Fin metodo AltaGrupoH
 
 }//Fin clase METODO_CONSULTAS

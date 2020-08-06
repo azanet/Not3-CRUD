@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-07-2020 a las 02:15:52
--- Versión del servidor: 10.3.22-MariaDB-0+deb10u1
+-- Tiempo de generación: 06-08-2020 a las 00:39:06
+-- Versión del servidor: 10.3.23-MariaDB-0+deb10u1
 -- Versión de PHP: 7.3.19-1+0~20200612.60+debian10~1.gbp6c8fe1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -48,20 +48,12 @@ CREATE TABLE `Descripcion` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `Grupo`
+-- Estructura de tabla para la tabla `Grupos`
 --
 
 CREATE TABLE `Grupos` (
   `Nom_Grupo` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `Grupo`
---
-
-INSERT INTO `Grupos` (`Nom_Grupo`) VALUES
-('Forense'),
-('Pentesting');
 
 --
 -- Índices para tablas volcadas
@@ -71,7 +63,7 @@ INSERT INTO `Grupos` (`Nom_Grupo`) VALUES
 -- Indices de la tabla `Articulos`
 --
 ALTER TABLE `Articulos`
-  ADD PRIMARY KEY (`Nom_Articulo`),
+  ADD PRIMARY KEY (`Nom_Articulo`,`Nom_Grupo`) USING BTREE,
   ADD KEY `Nom_Grupo` (`Nom_Grupo`);
 
 --
@@ -83,7 +75,7 @@ ALTER TABLE `Descripcion`
   ADD KEY `Nom_Grupo` (`Nom_Grupo`);
 
 --
--- Indices de la tabla `Grupo`
+-- Indices de la tabla `Grupos`
 --
 ALTER TABLE `Grupos`
   ADD PRIMARY KEY (`Nom_Grupo`);
@@ -96,7 +88,7 @@ ALTER TABLE `Grupos`
 -- AUTO_INCREMENT de la tabla `Descripcion`
 --
 ALTER TABLE `Descripcion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Restricciones para tablas volcadas

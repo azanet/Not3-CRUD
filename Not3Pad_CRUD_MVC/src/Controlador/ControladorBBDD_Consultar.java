@@ -422,7 +422,9 @@ public class ControladorBBDD_Consultar {
                 vista.textArea.append(vista.comboArticulos_SOLO.getSelectedItem().toString().toUpperCase()+"\n########################################################\n\n");//Poner aqui consulta con  articulos
                          
             }
-         
+           
+           ///////////////////// AGREGAR OPCIÓN A DISTINTAS ORDENACIONES EN EL FUTURO///////////////////////////////
+           /////////////////////////***************************//////////////////////////////////////////
          //Hacemos que se ordene el TreeSet con el comparador que trae el objeto (Que ordenará según el ID)
          ListaObjetosDescripcion.comparator();
             for (objetoTablaDescripcion obj : ListaObjetosDescripcion) {

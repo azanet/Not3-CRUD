@@ -207,10 +207,15 @@ public class ControladorVistaPrincipal {
         public void stateChanged(ChangeEvent ce) {
             //Creando objeto de PanelTextAREA QUE APUNTA  al PanelTextArea que tenemos en LA PESTAÑA ACTUAL
             //Por lo tanto estaremos actuando directamente en la pestaña seleccionada
+            try{
             panelTA = (PanelTextArea) panelPestanias.TP.getSelectedComponent();
             indexPestana = panelPestanias.TP.getSelectedIndex();
             Recargar();
-        }
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }//Fin del tryCatch
+           
+            }
 
     }//Fin oyenteCambioPestaña
 
@@ -342,7 +347,7 @@ public class ControladorVistaPrincipal {
                 vistaInsertar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.insertar));
 
             } else {
-                //Hacemos que se cierre solo ESTA ventana, sin finalizar la ejecución del programa
+                //Hacemos que se "cierre" solo ESTA ventana, sin finalizar la ejecución del programa (la ventana conservará su estado al salir de esta))
                 vistaInsertar.dispose();
             }//Fin del If_else
 

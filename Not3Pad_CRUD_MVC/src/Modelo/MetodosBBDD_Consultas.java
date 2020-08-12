@@ -29,8 +29,8 @@ public class MetodosBBDD_Consultas {
     //PreparedStatement s;
 
     //Crearemos esta variable statica, para comprobar desde cualquier parte del codigo si EXISTE UN ERROR EN LA CONEXION a la BBDD y si es así NOI PERMITIR realizar ninguna consulta
-    static boolean BBDD_Error = false;
-
+    public static boolean BBDD_Conectado = false;
+    
       //INICIALIZAMOS EL OBJETO EN EL CONSTRUCTOR (a travez de la llamada a una funcion privada,por seguridad)
     public MetodosBBDD_Consultas() {
       Conexion();
@@ -39,29 +39,38 @@ public class MetodosBBDD_Consultas {
 
 
     private void Conexion() {
-        if (BBDD_Error == false) {
+       
             try {
                 //LE INDICAMOS CUAL ES EL DRIVER
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 //Con este objeto de Connection y utilizando "getConnection" que lleva 3 parametros, le indicamos la bbdd a conectar, usuario y contraseña
-              String url = "jdbc:mysql://localhost:3306/Not3Pad?verifyServerCertificate=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-
-               this.con = DriverManager.getConnection(url, "not3pad", "admin");//Nombre de Uuario(not3pad) y contraseña(admin) asignadas a la BBDD 
-                BBDD_Error = false;
+                 //  String url = "jdbc:mysql://localhost:3306/Not3Pad?verifyServerCertificate=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+               //   this.con = DriverManager.getConnection(url, "USUARIO", "CONTRASEÑA");//Nombre de Uuario(not3pad) y contraseña(admin) asignadas a la BBDD 
+                String url= "jdbc:mysql://"+Controlador.ControladorVistaPrincipal.BBDDurl+":"+Controlador.ControladorVistaPrincipal.BBDDpuerto+"/"+Controlador.ControladorVistaPrincipal.BBDDname+"?autoReconnect=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+                this.con = DriverManager.getConnection(url, Controlador.ControladorVistaPrincipal.BBDDusuario, Controlador.ControladorVistaPrincipal.BBDDpass); 
+                BBDD_Conectado = true;
+         
+             
 
             } catch (ClassNotFoundException | SQLException e) {
-                BBDD_Error = true;
+                BBDD_Conectado = false;
                 JOptionPane.showMessageDialog(null, ("Error " + e), "Failure", JOptionPane.ERROR_MESSAGE);
+   
+              
             }//Fin del try catch
 
-        }
+        
     }//Fin del CONSTRUCTOR
+    
+    
+    
+      
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //METODO BOTON ALTA GRUPO (publico y privado)  
     public String AltaGrupo(String nom_Grupo) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return AltaGrupoH(nom_Grupo);
         } else {
             return "";
@@ -100,7 +109,7 @@ public class MetodosBBDD_Consultas {
     //METODO LECTURA GRUPOS (publico y privado)     
     public String[] LecturaGrupos() {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return LecturaGruposH();
         } else {
             String[] lista_aux = {"============>"};
@@ -149,7 +158,7 @@ public class MetodosBBDD_Consultas {
     //METODO BOTON ALTA ARTICULO (publico y privado)  
     public String AltaArticulo(String nom_Grupo, String nom_Articulo) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return AltaArticuloH(nom_Grupo, nom_Articulo);
         } else {
             return "";
@@ -189,7 +198,7 @@ public class MetodosBBDD_Consultas {
     //METODO LECTURA ARTICULOS (publico y privado)     
     public String[] LecturaArticulos(String nom_Grupo) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return LecturaArticulosH(nom_Grupo);
         } else {
             String[] lista_aux = {"============>"};
@@ -236,7 +245,7 @@ public class MetodosBBDD_Consultas {
     //METODO BOTON ALTA DESCRIPCION (publico y privado)  
     public String AltaDescripcion(String nom_Grupo, String nom_Articulo, String descripcion) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return AltaDescripcionH(nom_Grupo, nom_Articulo, descripcion);
         } else {
             return "";
@@ -279,7 +288,7 @@ public class MetodosBBDD_Consultas {
     //METODO LECTURA ARTICULOS (publico y privado)     
     public String[] LecturaArticulos_SOLO() {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return LecturaArticulos_SOLO_H();
         } else {
             String[] lista_aux = {"============>"};
@@ -323,7 +332,7 @@ public class MetodosBBDD_Consultas {
 //METODO LECTURA TABLA DESCRIPCION por GRUPO y ARTICULO (publico y privado)     
     public TreeSet<objetoTablaDescripcion> LecturaDescripcion_DUO(String nomGrupo, String nomArticulo) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return LecturaDescripcion_DUO_H(nomGrupo, nomArticulo);
         } else {
             TreeSet<objetoTablaDescripcion> lista = new TreeSet<>();
@@ -373,7 +382,7 @@ public class MetodosBBDD_Consultas {
 //METODO LECTURA TABLA DESCRIPCION por GRUPO (publico y privado)     
     public TreeSet<objetoTablaDescripcion> LecturaDescripcionGrupo_SOLO(String nomGrupo) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return LecturaDescripcionGrupo_SOLO_H(nomGrupo);
         } else {
             TreeSet<objetoTablaDescripcion> lista = new TreeSet<>();
@@ -423,7 +432,7 @@ public class MetodosBBDD_Consultas {
 //METODO LECTURA TABLA DESCRIPCION por  ARTICULO (publico y privado)     
     public TreeSet<objetoTablaDescripcion> LecturaDescripcionArticulo_SOLO(String nomArticulo) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return LecturaDescripcionArticulo_SOLO_H(nomArticulo);
         } else {
             TreeSet<objetoTablaDescripcion> lista = new TreeSet<>();
@@ -473,7 +482,7 @@ public class MetodosBBDD_Consultas {
     //METODO BOTON MODOFOCAR DESCRIPCION (publico y privado)  
     public boolean ModificarDescripcion(Integer id, String descripcion) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return ModificarDescripcionH(id, descripcion);
         } else {
             return false;
@@ -512,7 +521,7 @@ public class MetodosBBDD_Consultas {
     //METODO BOTON ALTA DESCRIPCION (publico y privado)  
     public String ObtenerDescripcion(Integer id) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return ObtenerDescripcionH(id);
         } else {
             return "";
@@ -553,7 +562,7 @@ public class MetodosBBDD_Consultas {
     //METODO BOTON ELIMINAR GRUPO (publico y privado)  
     public boolean EliminarGrupo(String nom_Grupo) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return EliminarGrupoH(nom_Grupo);
         } else {
             return false;
@@ -599,7 +608,7 @@ public class MetodosBBDD_Consultas {
     //METODO BOTON ELIMINAR ARTICULO (publico y privado)  
     public boolean EliminarArticulo(String nom_Grupo, String nom_Articulo) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return EliminarArticuloH(nom_Grupo, nom_Articulo);
         } else {
             return false;
@@ -645,7 +654,7 @@ public class MetodosBBDD_Consultas {
     //METODO BOTON ELIMINAR DESCRIPCION (publico y privado)  
     public boolean EliminarDescripcion(Integer id) {
 
-        if (!BBDD_Error) {
+        if (BBDD_Conectado) {
             return EliminarDescripcionH(id);
         } else {
             return false;

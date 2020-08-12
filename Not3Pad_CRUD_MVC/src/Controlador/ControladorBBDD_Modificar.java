@@ -37,10 +37,10 @@ public class ControladorBBDD_Modificar {
     public int articuloSeleccionado = 0;
     
 
-    public ControladorBBDD_Modificar(VistaBBDD_Modificar vista) {
+    public ControladorBBDD_Modificar(VistaBBDD_Modificar vista, MetodosBBDD_Consultas metodos) {
         
         this.vista = vista;
-        this.metodos = new MetodosBBDD_Consultas();
+        this.metodos = metodos;
         
   Iniciar();
             

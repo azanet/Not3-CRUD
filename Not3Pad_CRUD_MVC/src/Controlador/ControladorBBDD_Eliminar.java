@@ -39,10 +39,10 @@ public class ControladorBBDD_Eliminar {
     
 
 
-    public ControladorBBDD_Eliminar(VistaBBDD_Eliminar vista) {
+    public ControladorBBDD_Eliminar(VistaBBDD_Eliminar vista, MetodosBBDD_Consultas metodos) {
         
         this.vista = vista;
-        this.metodos = new MetodosBBDD_Consultas();
+        this.metodos = metodos;
         Iniciar();
             
     }

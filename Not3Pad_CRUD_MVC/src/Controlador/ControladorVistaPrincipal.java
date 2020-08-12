@@ -6,6 +6,7 @@
 package Controlador;
 
 import Modelo.Imprimir;
+import Modelo.MetodosBBDD_Consultas;
 import Modelo.MetodosPrincipal;
 import Vistas.PanelMenuBar;
 import Vistas.PanelTextArea;
@@ -16,6 +17,7 @@ import Vistas.VistaBBDD_Insertar;
 import Vistas.VistaBBDD_Modificar;
 import Vistas.VistaPrincipal;
 import static Vistas.VistaPrincipal.panelBase;
+import Vistas.Vista_LOGIN_BBDD;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -63,11 +65,11 @@ public class ControladorVistaPrincipal {
     public static JTextArea texAreaExportar; //este AREA, lse usará para recuperar el contenido de la consulta realizada, y que pueda recogerse para insertarla en la pestaña que este vigente, si se desea
     public static JButton ExportarConsultaAPestania; //este Boton, lse usará para recuperar el contenido de la consulta realizada, y que pueda recogerse para insertarla en la pestaña que este vigente, si se desea
 
-    private final VistaBBDD_Insertar vistaInsertar;
-    private final VistaBBDD_Consultar vistaConsultar;
-    private final VistaBBDD_Modificar vistaModificar;
-    private final VistaBBDD_Eliminar vistaEliminar;
-
+    private  VistaBBDD_Insertar vistaInsertar;
+    private  VistaBBDD_Consultar vistaConsultar;
+    private  VistaBBDD_Modificar vistaModificar;
+    private  VistaBBDD_Eliminar vistaEliminar;
+    private MetodosBBDD_Consultas metodos;
     //Declarando objetos y variables necesarias para poder cambiar el estilo y formato de los TextArea
     Font fuente;
     Color color;
@@ -80,6 +82,17 @@ public class ControladorVistaPrincipal {
     Color colorTextoSeleccionado;
     int indexPestana; //En esta variable iremos almacenando el INDEX de la pestaña en la que nos encontramos
 
+    //Variables para Realizar el LOGIN (rescataremos esta info si existe guardada en el fichero de configuracion)
+    public static String BBDDurl="localhost";
+    public static String BBDDpuerto="3306";
+    public static String BBDDname="Not3Pad";
+    public static String BBDDusuario="not3pad";
+    public static String BBDDpass="admin";
+    public static boolean BBDDaceptar=false; //Con esta variable, determinaremos si el usuario le da a aceptar o a cancelar en el LOGIN
+    
+    
+    
+    
     public ControladorVistaPrincipal(VistaPrincipal vistaPrincipal, MetodosPrincipal metodosPrincipal) {
         this.vistaPrincipal = vistaPrincipal;
         this.metodosPrincipal = metodosPrincipal;
@@ -89,16 +102,7 @@ public class ControladorVistaPrincipal {
         this.ExportarConsultaAPestania = new JButton("Exportar a Pestaña");
         this.texAreaExportar = new JTextArea("");
 
-        //INICIALIZANDO VISTAS Y CONTROLADORES DE LAS CONSULTAS, PASAR A UNA FUNCION SOLA, QUE SEA LLAMADA UNA SOLA VEZ
-        //SE UTILIZARÁ UNA VARIABLE BOOLEANA PARA DETECTAR SI YA SE HA INICIADO POR PRIMERA VEZ,O CORRECTAMENTE
-        vistaInsertar = new VistaBBDD_Insertar();
-        ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar);
-        vistaConsultar = new VistaBBDD_Consultar();
-        ControladorBBDD_Consultar Controlador_Consultar = new ControladorBBDD_Consultar(vistaConsultar);
-        vistaEliminar = new VistaBBDD_Eliminar();
-        ControladorBBDD_Eliminar Controlador_Eliminar = new ControladorBBDD_Eliminar(vistaEliminar);
-        vistaModificar = new VistaBBDD_Modificar();
-        ControladorBBDD_Modificar Controlador_Modificar = new ControladorBBDD_Modificar(vistaModificar);
+   
 
         /////// FIM DE CONTROLADORES Y VISTAS DE LA BBDD////////////////////////////////////////
         //Configuramos el layout del panelMenuBar a Border, y agregamos los paneles
@@ -148,6 +152,7 @@ public class ControladorVistaPrincipal {
         panelMenuBar.colorTextoSeleccionado.addActionListener(new OyenteColorTextoSeleccionado());
 
         //Insertando OYENTES DE OBJETOS a los CheckBox
+        panelMenuBar.conectar_desconectar.addActionListener(new OyenteBBDD_Conectar_Desconectar());
         panelMenuBar.insertar.addItemListener(new OyenteBBDD_Insertar());
         panelMenuBar.consultar.addItemListener(new OyenteBBDD_Consultar());
         panelMenuBar.modificar.addItemListener(new OyenteBBDD_Modificar());
@@ -179,9 +184,15 @@ public class ControladorVistaPrincipal {
         panelMenuBar.edicion.setEnabled(false);
         panelMenuBar.imprimir.setEnabled(false);
         panelMenuBar.personalizar.setEnabled(false);
-        //   panelMenuBar.consultar.setEnabled(false);
         panelMenuBar.comboBox.setEnabled(false);
         panelMenuBar.comboBoxStyle.setEnabled(false);
+      
+        //DESHABILITANDO BOTONES DE BBDD
+        panelMenuBar.insertar.setEnabled(false);
+        panelMenuBar.consultar.setEnabled(false);
+        panelMenuBar.modificar.setEnabled(false);
+        panelMenuBar.eliminar.setEnabled(false);
+        
 
         //Le assignamos el tamaño a la Vista Principal
         vistaPrincipal.setBounds(0, 0, 600, 500);
@@ -269,7 +280,7 @@ public class ControladorVistaPrincipal {
             panelMenuBar.personalizar.setEnabled(true);
             panelMenuBar.comboBox.setEnabled(true);
             panelMenuBar.comboBoxStyle.setEnabled(true);
-            panelMenuBar.consultar.setEnabled(true);
+       
         } else {
             //Desactivamos los botones porque no Existirá ninguna pestaña abierta
             panelMenuBar.guardar.setEnabled(false);
@@ -280,7 +291,7 @@ public class ControladorVistaPrincipal {
             panelMenuBar.personalizar.setEnabled(false);
             panelMenuBar.comboBox.setEnabled(false);
             panelMenuBar.comboBoxStyle.setEnabled(false);
-            panelMenuBar.consultar.setEnabled(false);
+     
         }//Find el ifelse
 
     }//Fin del metodo Recargar
@@ -334,7 +345,68 @@ public class ControladorVistaPrincipal {
 
     ////////////////////////////////////////////////////////////////////////////////   
     //////// LISTENERS de los JCHECKBOX correspondientes al Menú BBDD   ////////////   
-    ////////////////////////////////////////////////////////////////////////////////      
+    ////////////////////////////////////////////////////////////////////////////////   
+    
+    
+    
+      //Listener de BBDD-CONECTAR
+    class OyenteBBDD_Conectar_Desconectar implements ActionListener {
+
+        
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+        
+         //INICIALIZANDO VISTAS Y CONTROLADORES DE LAS CONSULTAS, PASAR A UNA FUNCION SOLA, QUE SEA LLAMADA UNA SOLA VEZ
+        //SE UTILIZARÁ UNA VARIABLE BOOLEANA PARA DETECTAR SI YA SE HA INICIADO o NO y respecto a esta, se modificará el botón y sus funciones
+        if (!MetodosBBDD_Consultas.BBDD_Conectado){
+            Vista_LOGIN_BBDD login = new Vista_LOGIN_BBDD(vistaPrincipal, true);
+            if (BBDDaceptar==true){
+                metodos = new MetodosBBDD_Consultas();
+            }
+        } 
+       
+        //Para ejecutarse esta primera parte, la conexion debe ser satisfactoria, no haber pulsado a cancelar y el boton debe marcar "CONECTAR"
+        if ( BBDDaceptar==true && MetodosBBDD_Consultas.BBDD_Conectado &&  panelMenuBar.conectar_desconectar.getText().equals("CONECTAR")){
+            vistaInsertar = new VistaBBDD_Insertar();
+            ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar, metodos);
+            vistaConsultar = new VistaBBDD_Consultar();
+            ControladorBBDD_Consultar Controlador_Consultar = new ControladorBBDD_Consultar(vistaConsultar, metodos);
+            vistaEliminar = new VistaBBDD_Eliminar();
+            ControladorBBDD_Eliminar Controlador_Eliminar = new ControladorBBDD_Eliminar(vistaEliminar, metodos);
+            vistaModificar = new VistaBBDD_Modificar();
+            ControladorBBDD_Modificar Controlador_Modificar = new ControladorBBDD_Modificar(vistaModificar, metodos);
+            panelMenuBar.conectar_desconectar.setText("DESCONECTAR");
+            
+            //HABILITANDO BOTONES DE BBDD
+             panelMenuBar.insertar.setEnabled(true);
+             panelMenuBar.consultar.setEnabled(true);
+             panelMenuBar.modificar.setEnabled(true);
+             panelMenuBar.eliminar.setEnabled(true);
+             
+             JOptionPane.showMessageDialog(panelMenuBar.conectar_desconectar, "Conectado CORRECTAMENTE a la BBDD", "Conexión Satisfactoria", JOptionPane.INFORMATION_MESSAGE);
+        
+        //Si la conxion es erronea o ya se habia iniciado sesion, procedemos a desconectarnos y cambiar el nombre del boton a "conectar"
+        }else if (BBDDaceptar==true && MetodosBBDD_Consultas.BBDD_Conectado &&  panelMenuBar.conectar_desconectar.getText().equals("DESCONECTAR")) {
+            panelMenuBar.conectar_desconectar.setText("CONECTAR");
+            MetodosBBDD_Consultas.BBDD_Conectado=false;
+            //DESHABILITANDO BOTONES DE BBDD
+             panelMenuBar.insertar.setEnabled(false);
+             panelMenuBar.consultar.setEnabled(false);
+             panelMenuBar.modificar.setEnabled(false);
+             panelMenuBar.eliminar.setEnabled(false);
+ 
+             JOptionPane.showMessageDialog(panelMenuBar.conectar_desconectar, "Desconectado de la BBDD", "Desconexión Satisfactoria", JOptionPane.INFORMATION_MESSAGE);
+        }//Fin del ELSE
+            
+        }
+
+    }//Fin del Oyente CONECTAR
+    
+    
+    
+    
+    
+    
     //Listener de BBDD-INSERTAR
     class OyenteBBDD_Insertar implements ItemListener {
 

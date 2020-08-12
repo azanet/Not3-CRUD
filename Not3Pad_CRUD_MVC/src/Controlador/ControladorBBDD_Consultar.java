@@ -38,10 +38,10 @@ public class ControladorBBDD_Consultar {
     
 
 
-    public ControladorBBDD_Consultar(VistaBBDD_Consultar vista) {
+    public ControladorBBDD_Consultar(VistaBBDD_Consultar vista, MetodosBBDD_Consultas metodos) {
         
         this.vista = vista;
-        this.metodos = new MetodosBBDD_Consultas();
+        this.metodos = metodos;
         Iniciar();
             
     }

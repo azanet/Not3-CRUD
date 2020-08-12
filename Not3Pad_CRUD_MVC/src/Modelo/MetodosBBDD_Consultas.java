@@ -31,20 +31,22 @@ public class MetodosBBDD_Consultas {
     //Crearemos esta variable statica, para comprobar desde cualquier parte del codigo si EXISTE UN ERROR EN LA CONEXION a la BBDD y si es así NOI PERMITIR realizar ninguna consulta
     static boolean BBDD_Error = false;
 
-    //INICIALIZAMOS EL OBJETO EN EL CONSTRUCTOR (a travez de la llamada a una funcion privada,por seguridad)
+      //INICIALIZAMOS EL OBJETO EN EL CONSTRUCTOR (a travez de la llamada a una funcion privada,por seguridad)
     public MetodosBBDD_Consultas() {
-        Conexion1();
+      Conexion();
 
     }
 
-    private void Conexion1() {
+
+    private void Conexion() {
         if (BBDD_Error == false) {
             try {
                 //LE INDICAMOS CUAL ES EL DRIVER
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 //Con este objeto de Connection y utilizando "getConnection" que lleva 3 parametros, le indicamos la bbdd a conectar, usuario y contraseña
-                String url = "jdbc:mysql://localhost:3306/Not3Pad?verifyServerCertificate=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-                 this.con = DriverManager.getConnection(url, "not3pad", "admin");//Nombre de Uuario(not3pad) y contraseña(admin) asignadas a la BBDD 
+              String url = "jdbc:mysql://localhost:3306/Not3Pad?verifyServerCertificate=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+
+               this.con = DriverManager.getConnection(url, "not3pad", "admin");//Nombre de Uuario(not3pad) y contraseña(admin) asignadas a la BBDD 
                 BBDD_Error = false;
 
             } catch (ClassNotFoundException | SQLException e) {
@@ -81,7 +83,7 @@ public class MetodosBBDD_Consultas {
                     resultado = "GRUPO DADO DE ALTA con éxito:\n\nNombre Grupo: " + nom_Grupo;
                     return resultado;
                 }
-                //CERRAMOS CONEXION
+                //CERRAMOS CONEXION(se cierra automaticamente)
             }
 
         } catch (HeadlessException | SQLException e) {
@@ -492,7 +494,7 @@ public class MetodosBBDD_Consultas {
                 } else {
                     return true;
                 }
-                //CERRAMOS CONEXION
+                //CERRAMOS CONEXION(se cierra automaticamente)
 
             }
 
@@ -544,5 +546,146 @@ public class MetodosBBDD_Consultas {
         return "";
 
     }//Fin metodo AltaGrupoH
+    
+    
+    
+    //////////////////////////////////////////////////////////////////////////////////    
+    //METODO BOTON ELIMINAR GRUPO (publico y privado)  
+    public boolean EliminarGrupo(String nom_Grupo) {
+
+        if (!BBDD_Error) {
+            return EliminarGrupoH(nom_Grupo);
+        } else {
+            return false;
+        }
+
+    }//Fin 
+
+    private boolean EliminarGrupoH(String nom_Grupo) {
+        // Preparamos la consulta
+        try {
+
+            try (PreparedStatement s1 = this.con.prepareStatement("DELETE FROM Grupos WHERE Grupos.Nom_Grupo = ?") //Agregando parametros a la posicion correspondiente de la consulta
+                    ) {
+                s1.setString(1, nom_Grupo);
+               
+                
+                if (s1.executeUpdate() == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+                //CERRAMOS CONEXION (se cierra automaticamente)
+
+            }
+
+        } catch (HeadlessException | SQLException e) {
+
+            JOptionPane.showMessageDialog(null, ("Error " + e), "Failure", JOptionPane.ERROR_MESSAGE);
+
+        }//Fin del try catch
+
+        return false;
+
+    }//Fin metodo ELIMINAR
+    
+    
+    
+    
+    
+    
+    
+    //////////////////////////////////////////////////////////////////////////////////    
+    //METODO BOTON ELIMINAR ARTICULO (publico y privado)  
+    public boolean EliminarArticulo(String nom_Grupo, String nom_Articulo) {
+
+        if (!BBDD_Error) {
+            return EliminarArticuloH(nom_Grupo, nom_Articulo);
+        } else {
+            return false;
+        }
+
+    }//Fin 
+
+    private boolean EliminarArticuloH(String nom_Grupo, String nom_Articulo) {
+        // Preparamos la consulta
+        try {
+
+            try (PreparedStatement s1 = this.con.prepareStatement("DELETE FROM Articulos WHERE Articulos.Nom_Grupo = ? AND Articulos.Nom_Articulo = ?") //Agregando parametros a la posicion correspondiente de la consulta
+                    ) {
+                s1.setString(1, nom_Grupo);
+                s1.setString(2, nom_Articulo);
+                
+                if (s1.executeUpdate() == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+                //CERRAMOS CONEXION (se cierra automaticamente)
+
+            }
+
+        } catch (HeadlessException | SQLException e) {
+
+            JOptionPane.showMessageDialog(null, ("Error " + e), "Failure", JOptionPane.ERROR_MESSAGE);
+
+        }//Fin del try catch
+
+        return false;
+
+    }//Fin metodo ELIMINAR
+    
+    
+    
+    
+    
+    
+    
+       //////////////////////////////////////////////////////////////////////////////////    
+    //METODO BOTON ELIMINAR DESCRIPCION (publico y privado)  
+    public boolean EliminarDescripcion(Integer id) {
+
+        if (!BBDD_Error) {
+            return EliminarDescripcionH(id);
+        } else {
+            return false;
+        }
+
+    }//Fin 
+
+    private boolean EliminarDescripcionH(Integer id) {
+        // Preparamos la consulta
+        try {
+
+            try (PreparedStatement s1 = this.con.prepareStatement("DELETE FROM Descripcion WHERE Descripcion.id = ?") //Agregando parametros a la posicion correspondiente de la consulta
+                    ) {
+                s1.setInt(1, id);
+                
+                if (s1.executeUpdate() == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+                //CERRAMOS CONEXION (se cierra automaticamente)
+
+            }
+
+        } catch (HeadlessException | SQLException e) {
+
+            JOptionPane.showMessageDialog(null, ("Error " + e), "Failure", JOptionPane.ERROR_MESSAGE);
+
+        }//Fin del try catch
+
+        return false;
+
+    }//Fin metodo ELIMINAR
+
+    
+    
+    
+    
+    
+    
+    
 
 }//Fin clase METODO_CONSULTAS

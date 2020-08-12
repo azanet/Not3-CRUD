@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 06-08-2020 a las 00:39:06
+-- Tiempo de generación: 12-08-2020 a las 05:07:09
 -- Versión del servidor: 10.3.23-MariaDB-0+deb10u1
 -- Versión de PHP: 7.3.19-1+0~20200612.60+debian10~1.gbp6c8fe1
 
@@ -64,15 +64,17 @@ CREATE TABLE `Grupos` (
 --
 ALTER TABLE `Articulos`
   ADD PRIMARY KEY (`Nom_Articulo`,`Nom_Grupo`) USING BTREE,
-  ADD KEY `Nom_Grupo` (`Nom_Grupo`);
+  ADD KEY `Nom_Grupo` (`Nom_Grupo`),
+  ADD KEY `Nom_Articulo` (`Nom_Articulo`);
 
 --
 -- Indices de la tabla `Descripcion`
 --
 ALTER TABLE `Descripcion`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `Nom_Programa` (`Nom_Articulo`),
-  ADD KEY `Nom_Grupo` (`Nom_Grupo`);
+  ADD PRIMARY KEY (`Nom_Grupo`,`Nom_Articulo`,`id`) USING BTREE,
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `Nom_Grupo` (`Nom_Grupo`),
+  ADD KEY `Nom_Articulo` (`Nom_Articulo`);
 
 --
 -- Indices de la tabla `Grupos`
@@ -88,7 +90,7 @@ ALTER TABLE `Grupos`
 -- AUTO_INCREMENT de la tabla `Descripcion`
 --
 ALTER TABLE `Descripcion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- Restricciones para tablas volcadas
@@ -98,14 +100,14 @@ ALTER TABLE `Descripcion`
 -- Filtros para la tabla `Articulos`
 --
 ALTER TABLE `Articulos`
-  ADD CONSTRAINT `Articulos_ibfk_1` FOREIGN KEY (`Nom_Grupo`) REFERENCES `Grupos` (`Nom_Grupo`);
+  ADD CONSTRAINT `Articulos_ibfk_1` FOREIGN KEY (`Nom_Grupo`) REFERENCES `Grupos` (`Nom_Grupo`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `Descripcion`
 --
 ALTER TABLE `Descripcion`
-  ADD CONSTRAINT `Descripcion_ibfk_1` FOREIGN KEY (`Nom_Articulo`) REFERENCES `Articulos` (`Nom_Articulo`),
-  ADD CONSTRAINT `Descripcion_ibfk_2` FOREIGN KEY (`Nom_Grupo`) REFERENCES `Grupos` (`Nom_Grupo`);
+  ADD CONSTRAINT `Descripcion_ibfk_1` FOREIGN KEY (`Nom_Articulo`) REFERENCES `Articulos` (`Nom_Articulo`) ON DELETE CASCADE,
+  ADD CONSTRAINT `Descripcion_ibfk_2` FOREIGN KEY (`Nom_Grupo`) REFERENCES `Articulos` (`Nom_Grupo`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

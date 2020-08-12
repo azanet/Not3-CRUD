@@ -399,9 +399,10 @@ public class VistaBBDD_Modificar extends JFrame {
         Container contentPane = getContentPane();
         contentPane.add(panelFormularios, BorderLayout.NORTH);
         contentPane.add(panelModificarDescripcion, BorderLayout.CENTER);
-        this.setBounds(100, 100, 600, 600);
+        this.setBounds(200, 200, 600, 600);
         this.setMinimumSize(new Dimension(854, 600));
         // this.setLocationRelativeTo(null);        
 
     }//Fin de iniciAR
-}//Fin de BBDD_Insertar
+    
+}//Fin de BBDD_Modificar

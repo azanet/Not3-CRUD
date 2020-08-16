@@ -21,26 +21,13 @@ public class not3Pad {
     public static void main(String[] args) {
         // TODO code application logic here
         VistaPrincipal vistaPrincipal = new VistaPrincipal();
-        MetodosPrincipal metodosPrincipal =new MetodosPrincipal();
+        MetodosPrincipal metodosPrincipal = new MetodosPrincipal();
         ControladorVistaPrincipal controladorPrincipal;
-        controladorPrincipal= new ControladorVistaPrincipal(vistaPrincipal, metodosPrincipal);
-  //      vistaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        controladorPrincipal = new ControladorVistaPrincipal(vistaPrincipal, metodosPrincipal);
+
         //En el controladorVistaPrincipal, se encuentra un método que controlará la salida de nuestro progrma
         // guardará un objeto de PanelPestaña que recuperará más tarde cuanmdo el programa sea abierto
         //Controlará si los archivos se encuentran guardados, etc.
-        
-         
-        
-        
-        
-        
-        
     }//Fin del bloque Main
-    
-    
-   
-    
-   
-    
+
 }//Fin de la clase principal

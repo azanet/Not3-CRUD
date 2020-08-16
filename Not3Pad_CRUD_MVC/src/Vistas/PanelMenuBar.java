@@ -32,7 +32,7 @@ public class PanelMenuBar extends JPanel {
     public JMenuItem abrir, guardar, guardarComo, renombrar, ir_A, deshacer, rehacer, copiar, pegar, cortar, insertarFecha, buscar, buscarYreemplazar, imprimir_configurando, imprimir_directo, salir, acercaDe;
     //Haremos estos CheckBox estáticos, para poder utilizarlo en las distintas ventanas correspondientes y poder cambiar su valor si el usuario elige salir de estas
     public JMenuItem conectar_desconectar;
-    public static JCheckBox  insertar, consultar, modificar, eliminar;
+    public static JCheckBox insertar, consultar, modificar, eliminar;
 
     public JMenuItem colorBackground, colorFuente, colorSeleccion, colorTextoSeleccionado, guardarConfiguracion;
     public JComboBox comboBoxTamanio, comboBoxStyle, comboBoxTipo;
@@ -72,7 +72,7 @@ public class PanelMenuBar extends JPanel {
         this.salir = new JMenuItem("Salir");
         this.acercaDe = new JMenuItem("Acerca de...");
 
-        this.conectar_desconectar= new JMenuItem("CONECTAR");
+        this.conectar_desconectar = new JMenuItem("CONECTAR");
         this.insertar = new JCheckBox("Insertar", false);
         this.consultar = new JCheckBox("Consultar", false);
         this.modificar = new JCheckBox("Modificar", false);
@@ -120,10 +120,10 @@ public class PanelMenuBar extends JPanel {
 
         comboBoxTipo.setBounds(377, 0, 77, 20);
         menuBar.add(comboBoxTipo);
-        
+
         comboBoxTamanio.setBounds(454, 0, 52, 20);
         menuBar.add(comboBoxTamanio);
-        
+
         //        setPreferredSize(new Dimension(410, 50));
         comboBoxStyle.setBounds(506, 0, 148, 20);
         menuBar.add(comboBoxStyle);

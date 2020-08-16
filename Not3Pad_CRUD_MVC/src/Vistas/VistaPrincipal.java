@@ -50,17 +50,14 @@ public class VistaPrincipal extends JFrame {
             JOptionPane.showMessageDialog(null, "Error al intentar establecer el estilo de vista\nSe establecerá el estilo visual por defecto");
         }
 
-           //Le assignamos el tamaño a la Vista Principal
-    //    setBounds(0, 0, 658, 500);
+        //Le assignamos el tamaño a la Vista Principal
+        setBounds(0, 0, 658, 500);
         setPreferredSize(new Dimension(658, 500));
         setMinimumSize(new Dimension(658, 56));
         //Con este método haremos que la pantalla salga JUSTO EN EL CENTRO
         setLocationRelativeTo(null);
-      
-        
+
     }//Fin del metodo INICIAR
-    
-  
 
 }//Fin de la vista principal
 

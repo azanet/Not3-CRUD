@@ -41,21 +41,18 @@ import javax.swing.undo.UndoManager;
  */
 public class VistaBBDD_Eliminar extends JFrame {
 
-  public JPanel panelFormularios; //Este es el panel que contiene los DISTINTOS PANELES que albergan los formularios y combobox
+    public JPanel panelFormularios; //Este es el panel que contiene los DISTINTOS PANELES que albergan los formularios y combobox
 
     //Declarando los RADIOCHECK BUTTON
-
     public JRadioButton RB_Selec_Descripcion; //RadioBut. para seleccionar DESCRIPCION
     public JRadioButton RB_Selec_Grupo; //RadioBut. para seleccionar GRUPO
     public JRadioButton RB_Selec_Articulo; //RadioBut. para seleccionar ARTICULO
 
     public ButtonGroup grupoRB = new ButtonGroup();
 
-  
-  
     public JPanel panelRadioButtons;
     public JPanel panelGrupos;
-    public JPanel panelGrupoIzquierda; 
+    public JPanel panelGrupoIzquierda;
     public JPanel panelGrupoDerecha;
 
     public JPanel panelArticulosDescripcion;
@@ -66,7 +63,7 @@ public class VistaBBDD_Eliminar extends JFrame {
     public JPanel panelModificarDescripcionSuperior;
     public JTextArea textArea;
     public JScrollPane scroll;
- 
+
     //DECLARANDO TODOS LOS ELEMENTOS QUE COMPONEN NUESTRA VENTANA
     //Declarando UndoManager (para rehacer y deshacer)
     public UndoManager manager;
@@ -82,11 +79,11 @@ public class VistaBBDD_Eliminar extends JFrame {
     //Declarando Campos y Area de Texto 
     //Declarando Etiquetas
     public JLabel tituloGrupo_DUO, tituloArticulo_DUO, tituloElegirDescripcion, tituloDescripcion, tituloOpcion;
-   
+
     //Declarando combobox
     public JComboBox comboGrupos_DUO, comboArticulos_DUO, comboElegirDescripcion;
     //Declarando Botones
-    public JButton BotonEliminarSeleccion,BotonObtenerDescripcion, BotonlimpiarPantalla, Botonsalir;
+    public JButton BotonEliminarSeleccion, BotonObtenerDescripcion, BotonlimpiarPantalla, Botonsalir;
 
 //Creando constructor
     public VistaBBDD_Eliminar() {
@@ -123,14 +120,7 @@ public class VistaBBDD_Eliminar extends JFrame {
         panelFormularios = new JPanel();
         panelFormularios.setLayout(new BoxLayout(panelFormularios, BoxLayout.Y_AXIS)); //Indicamos qu elos agregue hacia ABAJO
 
-        
-        
-        
-        
-        
-        
-        
-               ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
         //Creamos PANEL en el que se alojaran los PANELES QUE CONFORMAN las OPCIONES y textos de GRUPOS
         panelRadioButtons = new JPanel();
         panelRadioButtons.setLayout(new BoxLayout(panelRadioButtons, BoxLayout.X_AXIS));//Indicamos que los agregue hacia LA DERECHA
@@ -144,7 +134,7 @@ public class VistaBBDD_Eliminar extends JFrame {
         //Agregamos el separador al Panel GRUPOS
         panelRadioButtons.add(separator2);
 
-       panelRadioButtons.add(Box.createRigidArea(new Dimension(40, panelRadioButtons.getHeight())));
+        panelRadioButtons.add(Box.createRigidArea(new Dimension(40, panelRadioButtons.getHeight())));
 
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
         tituloOpcion = new JLabel("SELECCIONE OPCIÓN:");
@@ -154,43 +144,38 @@ public class VistaBBDD_Eliminar extends JFrame {
         tituloOpcion.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0)); //Creamos un borde para darle espacio arriba y abajo (por estetica)
         //Añadimos el TituloDelCombobox a este PANEL (GRUPO-IZQUIERDA)
         panelRadioButtons.add(tituloOpcion);
-       panelRadioButtons.add(Box.createRigidArea(new Dimension(40, panelRadioButtons.getHeight())));
-       
+        panelRadioButtons.add(Box.createRigidArea(new Dimension(40, panelRadioButtons.getHeight())));
+
         //Al pertenecer a un GRUPO, solo se puede elegir UNO
         RB_Selec_Grupo = new JRadioButton("ELIMINAR \"GRUPO\"");
         //RB_Selec_Grupo.setSelected(true);
         RB_Selec_Grupo.setAlignmentX(LEFT_ALIGNMENT);
-        RB_Selec_Grupo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0)); 
+        RB_Selec_Grupo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         //Agregamos el Radioboton al PANEL GRUPO IZQUIERDA
         panelRadioButtons.add(RB_Selec_Grupo);
         panelRadioButtons.add(Box.createRigidArea(new Dimension(40, panelRadioButtons.getHeight())));
-        
+
         RB_Selec_Articulo = new JRadioButton("ELIMINAR \"ARTÍCULO\"");
         //RB_Selec_Articulo.setSelected(true);
         RB_Selec_Articulo.setAlignmentX(LEFT_ALIGNMENT);
-        RB_Selec_Articulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0)); 
+        RB_Selec_Articulo.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         //Agregamos el Radioboton al PANEL GRUPO IZQUIERDA
         panelRadioButtons.add(RB_Selec_Articulo);
         panelRadioButtons.add(Box.createRigidArea(new Dimension(40, panelRadioButtons.getHeight())));
-      
+
         RB_Selec_Descripcion = new JRadioButton("ELIMINAR \"DESCRIPCIÓN\"");
         //RB_Selec_Descripcion.setSelected(true);
         RB_Selec_Descripcion.setAlignmentX(LEFT_ALIGNMENT);
-        RB_Selec_Descripcion.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0)); 
+        RB_Selec_Descripcion.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         //Agregamos el Radioboton al PANEL GRUPO IZQUIERDA
         panelRadioButtons.add(RB_Selec_Descripcion);
-        
-        
-        
-          ///////////////////FIN DE PANEL RADIO BUTONS//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        ///////////////////FIN DE PANEL RADIO BUTONS//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////AGREGANDO RADIOBOTONES A UN MISMO GRUPO//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         grupoRB.add(RB_Selec_Grupo);
         grupoRB.add(RB_Selec_Articulo);
         grupoRB.add(RB_Selec_Descripcion);
         ///////////////////FIN AGREGANDO RADIOBOTONES A UN MISMO GRUPO//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        
-       
 
         panelRadioButtons.add(Box.createRigidArea(new Dimension(40, panelRadioButtons.getHeight())));
 
@@ -198,23 +183,17 @@ public class VistaBBDD_Eliminar extends JFrame {
         separator7.setSize(2, 0); //El separador siempre hay que iniciarlo con este tamaño, y luego asignarle un tamaño maximo 
         separator7.setMaximumSize(new Dimension(2, 600));
         //Agregamos el separador al Panel GRUPOS
-       panelRadioButtons.add(separator7);
+        panelRadioButtons.add(separator7);
 
         //Le ponemos "PEGAMENTO" XD, para que se haga un area invisible que permitirá redimensionar la ventana sin que este componente se mueva de su sitio (ya que el area pegamento será la que se estire o encoja según precise)
         panelRadioButtons.add(Box.createHorizontalGlue());
 
-   
-        
-        
         //AÑADIENDO PANEL GRUPOS A EL PANEL "Formularios"
         panelFormularios.add(panelRadioButtons);
-        
+
         JSeparator separator13 = new JSeparator();
         panelFormularios.add(separator13);
-         
-         
-        
-        
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
         //Creamos PANEL en el que se alojaran los PANELES QUE CONFORMAN las OPCIONES y textos de GRUPOS
         panelGrupos = new JPanel();
@@ -276,7 +255,6 @@ public class VistaBBDD_Eliminar extends JFrame {
         panelGrupoDerecha.setLayout(new BoxLayout(panelGrupoDerecha, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
         panelGrupoDerecha.add(Box.createRigidArea(new Dimension(panelGrupoIzquierda.getWidth(), 10)));
 
-      
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
         tituloArticulo_DUO = new JLabel("Seleccione ARTÍCULO " + ((char) 9660));
         //Alineamos la eqtiqueta a la IZQUIERDA
@@ -340,7 +318,6 @@ public class VistaBBDD_Eliminar extends JFrame {
         panelElegirDescripcion = new JPanel();
         panelElegirDescripcion.setLayout(new BoxLayout(panelElegirDescripcion, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
 
-
         panelElegirDescripcion.add(Box.createRigidArea(new Dimension(panelElegirDescripcion.getWidth(), 10)));
 
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
@@ -372,8 +349,6 @@ public class VistaBBDD_Eliminar extends JFrame {
         //Ya completado el panel elegir descripcion, procedemos a agregarlo al PANEL-Descripcion
         panelArticulosDescripcion.add(panelElegirDescripcion);
 
-        
-
         panelArticulosDescripcion.add(Box.createRigidArea(new Dimension(36, panelArticulosDescripcion.getHeight())));
 
         JSeparator separator1 = new JSeparator(1);//Al llamar al separador utilizando 1 en el constructor, le indicamos que el separador estará en VERTICAL
@@ -390,9 +365,7 @@ public class VistaBBDD_Eliminar extends JFrame {
         JSeparator separator4 = new JSeparator();
         panelFormularios.add(separator4);
 
-
         ///////////////////FIN AGREGANDO RADIOBOTONES A UN MISMO GRUPO//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         ///////////////////SETEANDO Y AGREGANDO PANEL DESCRIPCION //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         panelModificarDescripcion = new JPanel();
         panelModificarDescripcion.setLayout(new BoxLayout(panelModificarDescripcion, BoxLayout.Y_AXIS));
@@ -433,7 +406,6 @@ public class VistaBBDD_Eliminar extends JFrame {
         BotonObtenerDescripcion.setBorder(BorderFactory.createEmptyBorder(15, 8, 15, 8));
         panelModificarDescripcionSuperior.add(BotonObtenerDescripcion);
         panelModificarDescripcionSuperior.add(Box.createRigidArea(new Dimension(16, panelModificarDescripcionSuperior.getHeight())));
-        
 
         BotonlimpiarPantalla = new JButton("Limpiar Pantalla");
         BotonlimpiarPantalla.setBackground(new Color(255, 253, 160));
@@ -455,7 +427,7 @@ public class VistaBBDD_Eliminar extends JFrame {
         //LE PASAMOS EL AREA DE TEXTO ESTATICA, PARA poder exportar la consulta a la pestaña si queremos
         textArea = new JTextArea("");//INicializando al TextArea 
         textArea.setEditable(true);//Haciendo que TextArea NO SEA EDITABLE
-        
+
         //Agregamos el PopUpMenu al TextArea
         textArea.setComponentPopupMenu(this.popMenu);
         //Con este metodo hacemos que se despliegue el menu al clicar el boton derecho

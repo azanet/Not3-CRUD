@@ -15,6 +15,9 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 
 /**
+ * ESTA CLASE LA HE COGIDO PRESTADA DE LA SIGUIENTE PÁGINA WEB:
+ * https://tips4java.wordpress.com/2009/05/23/text-component-line-number/
+ * 
  *  This class will display line numbers for a related text component. The text
  *  component must use the same line height for each line. TextLineNumber
  *  supports wrapped lines and will highlight the line number of the current

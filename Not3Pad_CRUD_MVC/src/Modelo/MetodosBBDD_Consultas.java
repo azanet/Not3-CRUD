@@ -30,41 +30,30 @@ public class MetodosBBDD_Consultas {
 
     //Crearemos esta variable statica, para comprobar desde cualquier parte del codigo si EXISTE UN ERROR EN LA CONEXION a la BBDD y si es así NOI PERMITIR realizar ninguna consulta
     public static boolean BBDD_Conectado = false;
-    
-      //INICIALIZAMOS EL OBJETO EN EL CONSTRUCTOR (a travez de la llamada a una funcion privada,por seguridad)
+
+    //INICIALIZAMOS EL OBJETO EN EL CONSTRUCTOR (a travez de la llamada a una funcion privada,por seguridad)
     public MetodosBBDD_Consultas() {
-      Conexion();
+        Conexion();
 
     }
 
-
     private void Conexion() {
-       
-            try {
-                //LE INDICAMOS CUAL ES EL DRIVER
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                //Con este objeto de Connection y utilizando "getConnection" que lleva 3 parametros, le indicamos la bbdd a conectar, usuario y contraseña
-                 //  String url = "jdbc:mysql://localhost:3306/Not3Pad?verifyServerCertificate=false&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-               //   this.con = DriverManager.getConnection(url, "USUARIO", "CONTRASEÑA");//Nombre de Uuario(not3pad) y contraseña(admin) asignadas a la BBDD 
-                String url= "jdbc:mysql://"+Controlador.ControladorVistaPrincipal.BBDDurl+":"+Controlador.ControladorVistaPrincipal.BBDDpuerto+"/"+Controlador.ControladorVistaPrincipal.BBDDname+"?autoReconnect=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-                this.con = DriverManager.getConnection(url, Controlador.ControladorVistaPrincipal.BBDDusuario, Controlador.ControladorVistaPrincipal.BBDDpass); 
-                BBDD_Conectado = true;
-         
-             
 
-            } catch (ClassNotFoundException | SQLException e) {
-                BBDD_Conectado = false;
-                JOptionPane.showMessageDialog(null, ("Error " + e), "Failure", JOptionPane.ERROR_MESSAGE);
-   
-              
-            }//Fin del try catch
+        try {
+            //LE INDICAMOS CUAL ES EL DRIVER
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            //Con este objeto de Connection y utilizando "getConnection" que lleva 3 parametros, le indicamos la bbdd a conectar, usuario y contraseña
+            String url = "jdbc:mysql://" + Controlador.ControladorVistaPrincipal.BBDDurl + ":" + Controlador.ControladorVistaPrincipal.BBDDpuerto + "/" + Controlador.ControladorVistaPrincipal.BBDDname + "?autoReconnect=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+            this.con = DriverManager.getConnection(url, Controlador.ControladorVistaPrincipal.BBDDusuario, Controlador.ControladorVistaPrincipal.BBDDpass);
+            BBDD_Conectado = true;
 
-        
+        } catch (ClassNotFoundException | SQLException e) {
+            BBDD_Conectado = false;
+            JOptionPane.showMessageDialog(null, ("Error " + e), "Failure", JOptionPane.ERROR_MESSAGE);
+
+        }//Fin del try catch
+
     }//Fin del CONSTRUCTOR
-    
-    
-    
-      
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //METODO BOTON ALTA GRUPO (publico y privado)  
@@ -535,11 +524,9 @@ public class MetodosBBDD_Consultas {
 
         try {
 
-          
-           
-              PreparedStatement s1 = this.con.prepareStatement("SELECT Descripcion.Texto FROM Descripcion WHERE Descripcion.id= ? "); //Agregando parametros a la posicion correspondiente de la consulta
-                s1.setInt(1, id);
-            
+            PreparedStatement s1 = this.con.prepareStatement("SELECT Descripcion.Texto FROM Descripcion WHERE Descripcion.id= ? "); //Agregando parametros a la posicion correspondiente de la consulta
+            s1.setInt(1, id);
+
             rs = s1.executeQuery();
 
             while (rs.next()) {
@@ -548,16 +535,14 @@ public class MetodosBBDD_Consultas {
                 //Agregamos objeto al TreeSet
                 return ObtenerDescripcion;
             }
-           
-            } catch (SQLException ex) {
-                Logger.getLogger(MetodosBBDD_Consultas.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MetodosBBDD_Consultas.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return "";
 
     }//Fin metodo AltaGrupoH
-    
-    
-    
+
     //////////////////////////////////////////////////////////////////////////////////    
     //METODO BOTON ELIMINAR GRUPO (publico y privado)  
     public boolean EliminarGrupo(String nom_Grupo) {
@@ -577,8 +562,7 @@ public class MetodosBBDD_Consultas {
             try (PreparedStatement s1 = this.con.prepareStatement("DELETE FROM Grupos WHERE Grupos.Nom_Grupo = ?") //Agregando parametros a la posicion correspondiente de la consulta
                     ) {
                 s1.setString(1, nom_Grupo);
-               
-                
+
                 if (s1.executeUpdate() == 0) {
                     return false;
                 } else {
@@ -597,13 +581,7 @@ public class MetodosBBDD_Consultas {
         return false;
 
     }//Fin metodo ELIMINAR
-    
-    
-    
-    
-    
-    
-    
+
     //////////////////////////////////////////////////////////////////////////////////    
     //METODO BOTON ELIMINAR ARTICULO (publico y privado)  
     public boolean EliminarArticulo(String nom_Grupo, String nom_Articulo) {
@@ -624,7 +602,7 @@ public class MetodosBBDD_Consultas {
                     ) {
                 s1.setString(1, nom_Grupo);
                 s1.setString(2, nom_Articulo);
-                
+
                 if (s1.executeUpdate() == 0) {
                     return false;
                 } else {
@@ -643,14 +621,8 @@ public class MetodosBBDD_Consultas {
         return false;
 
     }//Fin metodo ELIMINAR
-    
-    
-    
-    
-    
-    
-    
-       //////////////////////////////////////////////////////////////////////////////////    
+
+    //////////////////////////////////////////////////////////////////////////////////    
     //METODO BOTON ELIMINAR DESCRIPCION (publico y privado)  
     public boolean EliminarDescripcion(Integer id) {
 
@@ -669,7 +641,7 @@ public class MetodosBBDD_Consultas {
             try (PreparedStatement s1 = this.con.prepareStatement("DELETE FROM Descripcion WHERE Descripcion.id = ?") //Agregando parametros a la posicion correspondiente de la consulta
                     ) {
                 s1.setInt(1, id);
-                
+
                 if (s1.executeUpdate() == 0) {
                     return false;
                 } else {
@@ -688,13 +660,5 @@ public class MetodosBBDD_Consultas {
         return false;
 
     }//Fin metodo ELIMINAR
-
-    
-    
-    
-    
-    
-    
-    
 
 }//Fin clase METODO_CONSULTAS

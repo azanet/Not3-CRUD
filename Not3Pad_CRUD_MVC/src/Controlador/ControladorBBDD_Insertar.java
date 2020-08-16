@@ -36,7 +36,7 @@ public class ControladorBBDD_Insertar {
     public int grupoSeleccionado = 0;
     public int articuloSeleccionado = 0;
 
-    public ControladorBBDD_Insertar(VistaBBDD_Insertar vista,MetodosBBDD_Consultas metodos) {
+    public ControladorBBDD_Insertar(VistaBBDD_Insertar vista, MetodosBBDD_Consultas metodos) {
 
         this.vista = vista;
         this.metodos = metodos;

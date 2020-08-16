@@ -39,14 +39,11 @@ import javax.swing.undo.UndoManager;
  */
 public class VistaBBDD_Modificar extends JFrame {
 
- 
     public JPanel panelFormularios; //Este es el panel que contiene los DISTINTOS PANELES que albergan los formularios y combobox
 
     //Declarando los RADIOCHECK BUTTON
-
-
     public JPanel panelGrupos;
-    public JPanel panelGrupoIzquierda; 
+    public JPanel panelGrupoIzquierda;
     public JPanel panelGrupoDerecha;
 
     public JPanel panelArticulosDescripcion;
@@ -57,7 +54,7 @@ public class VistaBBDD_Modificar extends JFrame {
     public JPanel panelModificarDescripcionSuperior;
     public JTextArea textArea;
     public JScrollPane scroll;
- 
+
     //DECLARANDO TODOS LOS ELEMENTOS QUE COMPONEN NUESTRA VENTANA
     //Declarando UndoManager (para rehacer y deshacer)
     public UndoManager manager;
@@ -73,11 +70,11 @@ public class VistaBBDD_Modificar extends JFrame {
     //Declarando Campos y Area de Texto 
     //Declarando Etiquetas
     public JLabel tituloGrupo_DUO, tituloArticulo_DUO, tituloElegirDescripcion, tituloDescripcion;
-   
+
     //Declarando combobox
     public JComboBox comboGrupos_DUO, comboArticulos_DUO, comboElegirDescripcion;
     //Declarando Botones
-    public JButton BotonModificarDescripcion,BotonObtenerDescripcion, BotonlimpiarPantalla, Botonsalir;
+    public JButton BotonModificarDescripcion, BotonObtenerDescripcion, BotonlimpiarPantalla, Botonsalir;
 
 //Creando constructor
     public VistaBBDD_Modificar() {
@@ -175,7 +172,6 @@ public class VistaBBDD_Modificar extends JFrame {
         panelGrupoDerecha.setLayout(new BoxLayout(panelGrupoDerecha, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
         panelGrupoDerecha.add(Box.createRigidArea(new Dimension(panelGrupoIzquierda.getWidth(), 10)));
 
-      
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
         tituloArticulo_DUO = new JLabel("Seleccione ARTÍCULO " + ((char) 9660));
         //Alineamos la eqtiqueta a la IZQUIERDA
@@ -239,7 +235,6 @@ public class VistaBBDD_Modificar extends JFrame {
         panelElegirDescripcion = new JPanel();
         panelElegirDescripcion.setLayout(new BoxLayout(panelElegirDescripcion, BoxLayout.Y_AXIS));//Indicamos qu elos agregue hacia ABAJO
 
-
         panelElegirDescripcion.add(Box.createRigidArea(new Dimension(panelElegirDescripcion.getWidth(), 10)));
 
         //Creamos la ETIQUETA que INDICARÁ que hace nuestro combobox
@@ -271,8 +266,6 @@ public class VistaBBDD_Modificar extends JFrame {
         //Ya completado el panel elegir descripcion, procedemos a agregarlo al PANEL-Descripcion
         panelArticulosDescripcion.add(panelElegirDescripcion);
 
-        
-
         panelArticulosDescripcion.add(Box.createRigidArea(new Dimension(36, panelArticulosDescripcion.getHeight())));
 
         JSeparator separator1 = new JSeparator(1);//Al llamar al separador utilizando 1 en el constructor, le indicamos que el separador estará en VERTICAL
@@ -289,9 +282,7 @@ public class VistaBBDD_Modificar extends JFrame {
         JSeparator separator4 = new JSeparator();
         panelFormularios.add(separator4);
 
-
         ///////////////////FIN AGREGANDO RADIOBOTONES A UN MISMO GRUPO//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         ///////////////////SETEANDO Y AGREGANDO PANEL DESCRIPCION //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         panelModificarDescripcion = new JPanel();
         panelModificarDescripcion.setLayout(new BoxLayout(panelModificarDescripcion, BoxLayout.Y_AXIS));
@@ -332,7 +323,6 @@ public class VistaBBDD_Modificar extends JFrame {
         BotonObtenerDescripcion.setBorder(BorderFactory.createEmptyBorder(15, 8, 15, 8));
         panelModificarDescripcionSuperior.add(BotonObtenerDescripcion);
         panelModificarDescripcionSuperior.add(Box.createRigidArea(new Dimension(16, panelModificarDescripcionSuperior.getHeight())));
-        
 
         BotonlimpiarPantalla = new JButton("Limpiar Pantalla");
         BotonlimpiarPantalla.setBackground(new Color(255, 253, 160));
@@ -354,7 +344,7 @@ public class VistaBBDD_Modificar extends JFrame {
         //LE PASAMOS EL AREA DE TEXTO ESTATICA, PARA poder exportar la consulta a la pestaña si queremos
         textArea = new JTextArea("");//INicializando al TextArea 
         textArea.setEditable(true);//Haciendo que TextArea NO SEA EDITABLE
-        
+
         //Agregamos el PopUpMenu al TextArea
         textArea.setComponentPopupMenu(this.popMenu);
         //Con este metodo hacemos que se despliegue el menu al clicar el boton derecho
@@ -404,5 +394,5 @@ public class VistaBBDD_Modificar extends JFrame {
         // this.setLocationRelativeTo(null);        
 
     }//Fin de iniciAR
-    
+
 }//Fin de BBDD_Modificar

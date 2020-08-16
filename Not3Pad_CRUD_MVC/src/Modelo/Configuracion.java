@@ -12,29 +12,28 @@ import javax.swing.JTabbedPane;
 
 /**
  *
- * @author davidf
- * ESTE OBJETO, SERÁ UTILIZADO PARA ALMACENAR  LA CONFIGURACIÓN 
- * QUE HAYA SETEADO EL USUARIO COMO PREDETERMINADO Y GUARDADO: (COLORES, ESTILO DE FUENTE, TAMAÑO, ETC. )
- * 
+ * @author davidf ESTE OBJETO, SERÁ UTILIZADO PARA ALMACENAR LA CONFIGURACIÓN
+ * QUE HAYA SETEADO EL USUARIO COMO PREDETERMINADO Y GUARDADO: (COLORES, ESTILO
+ * DE FUENTE, TAMAÑO, ETC. )
+ *
  */
 public class Configuracion implements Serializable {
- //   private JTabbedPane TP_Almacenado;
+    //   private JTabbedPane TP_Almacenado;
+
     private Font Fuente_Almacenada;
     private Color background;
     private Color letra;
     private Color seleccion;
     private Color textoSeleccionado;
 
-    public Configuracion( Font Fuente_Almacenada, Color background, Color letra, Color seleccion, Color textoSeleccionado) {
-     //   this.TP_Almacenado = TP_Almacenado;
+    public Configuracion(Font Fuente_Almacenada, Color background, Color letra, Color seleccion, Color textoSeleccionado) {
+        //   this.TP_Almacenado = TP_Almacenado;
         this.Fuente_Almacenada = Fuente_Almacenada;
         this.background = background;
         this.letra = letra;
         this.seleccion = seleccion;
         this.textoSeleccionado = textoSeleccionado;
     }//Fin del constructor
-
-
 
     public Font getFuente_Almacenada() {
         return Fuente_Almacenada;
@@ -75,10 +74,5 @@ public class Configuracion implements Serializable {
     public void setTextoSeleccionado(Color textoSeleccionado) {
         this.textoSeleccionado = textoSeleccionado;
     }
-    
-    
-    
-    
-    
-    
-}
+
+}//Fin del objeto configuración

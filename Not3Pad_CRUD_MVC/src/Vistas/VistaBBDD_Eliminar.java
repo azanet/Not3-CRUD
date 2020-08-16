@@ -406,7 +406,7 @@ public class VistaBBDD_Eliminar extends JFrame {
         panelModificarDescripcionSuperior.add(Box.createRigidArea(new Dimension(10, panelModificarDescripcionSuperior.getHeight())));
         //Inicializando CAMPOS y AREA de Texto (aqui indicaremos lo que queremos que tenga escrito dentro el campo, EN MI CASO ESTARAN VACIOS)
 
-        tituloDescripcion = new JLabel("Modifique Consulta:");
+        tituloDescripcion = new JLabel("Descripción Obtenida:");
         tituloDescripcion.setBorder(BorderFactory.createEmptyBorder(30, 8, 0, 0));
         panelModificarDescripcionSuperior.add(tituloDescripcion);
 

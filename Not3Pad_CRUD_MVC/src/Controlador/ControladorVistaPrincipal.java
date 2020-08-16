@@ -5,9 +5,11 @@
  */
 package Controlador;
 
+import Modelo.Configuracion;
 import Modelo.Imprimir;
 import Modelo.MetodosBBDD_Consultas;
 import Modelo.MetodosPrincipal;
+
 import Vistas.PanelMenuBar;
 import Vistas.PanelTextArea;
 import Vistas.Panel_Pestanias;
@@ -29,20 +31,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import static java.awt.image.ImageObserver.HEIGHT;
 import java.awt.print.PrinterException;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
@@ -70,10 +85,20 @@ public class ControladorVistaPrincipal {
     private  VistaBBDD_Modificar vistaModificar;
     private  VistaBBDD_Eliminar vistaEliminar;
     private MetodosBBDD_Consultas metodos;
+           
+    private ControladorBBDD_Insertar Controlador_Insertar ;
+
+    private ControladorBBDD_Consultar Controlador_Consultar;
+ 
+    private ControladorBBDD_Eliminar Controlador_Eliminar;
+
+    private ControladorBBDD_Modificar Controlador_Modificar ;
+    
     //Declarando objetos y variables necesarias para poder cambiar el estilo y formato de los TextArea
     Font fuente;
     Color color;
     int tamanio_fuente;
+    int tipo_fuente;
     String nombre_fuente;
     String[] fontNames;//Estos métodos rellenarán el Array con los estilos de texto disponibles en nuestro sistema
     Color colorBackground;
@@ -82,6 +107,11 @@ public class ControladorVistaPrincipal {
     Color colorTextoSeleccionado;
     int indexPestana; //En esta variable iremos almacenando el INDEX de la pestaña en la que nos encontramos
 
+    //Declarando variables para GUARDAR las "OPCIONES VISUALES" del usuario (color texto etc..)
+    
+    
+    
+    
     //Variables para Realizar el LOGIN (rescataremos esta info si existe guardada en el fichero de configuracion)
     public static String BBDDurl="localhost";
     public static String BBDDpuerto="3306";
@@ -127,6 +157,7 @@ public class ControladorVistaPrincipal {
     }
 
     private void Iniciar() {
+        
         //Agregando LISTENERS de todos los botones existentes en el PanelMENUBAR
         panelMenuBar.nuevo.addActionListener(new OyenteNuevo());
         panelMenuBar.abrir.addActionListener(new OyenteAbrir());
@@ -150,6 +181,7 @@ public class ControladorVistaPrincipal {
         panelMenuBar.colorFuente.addActionListener(new OyenteColorFuente());
         panelMenuBar.colorSeleccion.addActionListener(new OyenteColorSeleccion());
         panelMenuBar.colorTextoSeleccionado.addActionListener(new OyenteColorTextoSeleccionado());
+        panelMenuBar.guardarConfiguracion.addActionListener(new OyenteGuardarConfiguracion());
 
         //Insertando OYENTES DE OBJETOS a los CheckBox
         panelMenuBar.conectar_desconectar.addActionListener(new OyenteBBDD_Conectar_Desconectar());
@@ -159,19 +191,27 @@ public class ControladorVistaPrincipal {
         panelMenuBar.eliminar.addItemListener(new OyenteBBDD_Eliminar());
         //Agregamos OYENTE al JTabbedPane, para saber a qué pestaña ha cambiado (y poder recuperar su componente para trabajar con el o lo que queramos)
         panelPestanias.TP.addChangeListener(new OyenteCambioPestana());
-
+           
         ExportarConsultaAPestania.addActionListener(new OyenteExportarConsulta());
-
+        
+        //RELLENANDO COMBOBOXES
+        panelMenuBar.comboBoxTipo.addItem("Normal");
+        panelMenuBar.comboBoxTipo.addItem("Bold");
+        panelMenuBar.comboBoxTipo.addItem("Italic");
+        panelMenuBar.comboBoxTipo.addItem("B+I");
+        // Accion a realizar cuando el JComboBox cambia de item seleccionado.
+        panelMenuBar.comboBoxTipo.addActionListener(new OyenteComboTipo());
+        
         //Añadiendo y cargando ComboBox de TAMAÑO LETRA
         for (int i = 0; i < 100; i++) {
-            panelMenuBar.comboBox.addItem(i);
+            panelMenuBar.comboBoxTamanio.addItem(i);
         }
         // Accion a realizar cuando el JComboBox cambia de item seleccionado.
-        panelMenuBar.comboBox.addActionListener(new OyenteComboTamanio());
+        panelMenuBar.comboBoxTamanio.addActionListener(new OyenteComboTamanio());
 
         ///AÑADIENDO COMBOBOX PARA ESTILO DE LETRA
         //Mostrar un listado con las fuentes DISPONIBLES
-        //Recorremos el array de FontNames para rellenar el comboBox con todos los estilos de letra disponibles 
+        //Recorremos el array de FontNames para rellenar el comboBoxTamanio con todos los estilos de letra disponibles 
         for (String fontName : fontNames) {
             panelMenuBar.comboBoxStyle.addItem(fontName);
         }
@@ -184,7 +224,8 @@ public class ControladorVistaPrincipal {
         panelMenuBar.edicion.setEnabled(false);
         panelMenuBar.imprimir.setEnabled(false);
         panelMenuBar.personalizar.setEnabled(false);
-        panelMenuBar.comboBox.setEnabled(false);
+        panelMenuBar.comboBoxTamanio.setEnabled(false);
+        panelMenuBar.comboBoxTipo.setEnabled(false);
         panelMenuBar.comboBoxStyle.setEnabled(false);
       
         //DESHABILITANDO BOTONES DE BBDD
@@ -193,18 +234,197 @@ public class ControladorVistaPrincipal {
         panelMenuBar.modificar.setEnabled(false);
         panelMenuBar.eliminar.setEnabled(false);
         
+      
+         
+                //Abrimos una pestaña nueva
+                panelPestanias = panelPestanias.PestaniaTextoNueva();
 
-        //Le assignamos el tamaño a la Vista Principal
-        vistaPrincipal.setBounds(0, 0, 600, 500);
-        vistaPrincipal.setMinimumSize(new Dimension(600, 56));
-        //Con este método haremos que la pantalla salga JUSTO EN EL CENTRO
-        vistaPrincipal.setLocationRelativeTo(null);
-        //Hacemos visible la vista Principal      
-        vistaPrincipal.setVisible(true);
-        panelPestanias = panelPestanias.PestaniaTextoNueva();
-
+        
+        //Agregando METODO para CERRAR VENTANA DEPENDIENDO SI HAY ALGO ABIERTO, no, o sin guardar, etc
+        cerrar();
+        Recargar();
+   
     }//Fin de iniciar
 
+    
+    
+    public void cerrar(){
+    
+        try{
+            vistaPrincipal.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            vistaPrincipal.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing (WindowEvent e){
+                    AlertarSalida();
+                }
+            });
+            vistaPrincipal.setVisible(true);
+        
+        }catch (Exception e){
+            e.getMessage();
+        }
+    
+    }//Fin del metodo CERRAR.
+    
+    public void AlertarSalida(){
+        
+            //Esta variable controlará si existe algún archivo sin guardar y cuantos, servirá para ir darle un indice a los objetos en el ARRAY, para saber si lanzar la notificación
+            //y para incluir los titulos luego en la notificación
+            int ficherosSinGuardar=0;
+            //en este ARRAY, almacenaremos los nombres de los archivos que están sin guardar, para mostrarselos al usuario
+            String[] titulosArchivosNoGuardados= new String[panelPestanias.TP.getTabCount()];//La dimension se la daremos según el contador de pestañas, para no quedartnos cortos y no pasarnos mucho
+            
+            
+            for (int i = 0; i < panelPestanias.TP.getTabCount(); i++) {
+         
+            String textoFichero = "";//Esta variable almacenará el contenido del fichero para poder compararlo con el del TextArea
+          
+            //Recojemos el componente "panelTextArea" de la pestaña seleccionada
+            PanelTextArea panelTAaux = (PanelTextArea) panelPestanias.TP.getComponentAt(i);
+      
+        //    System.out.println(panelTAaux.fichero.toString());
+
+            //Comprobamos si el archivo almacenado es distinto al contenido de nuestro textarea, en este caso,
+            //Ofreceremos guardar el documento a nuestro usuario
+            if (panelTAaux.fichero.length() > 0) {
+                try ( 
+                   //procedemos a crear el flujo y el lector, para leer nuestro fichero seleccionado
+                    //y poder almacenarlo para COMPARARLO   CON LO QUE HAY ESCRITO EN NUESTRO TEXTAREA
+                    FileReader flujo = new FileReader(panelTAaux.fichero)) {
+                    try (Scanner lector = new Scanner(flujo)) {
+                        while (lector.hasNext()) {
+                            textoFichero = (lector.nextLine() + "\n");
+                        }//Fin del WHILE
+                       lector.close(); 
+                       flujo.close();
+                    }
+         
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(Panel_Pestanias.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }//FIn del IF
+
+              //Si el contenido del fichero es distinto al contenido del TextArea de su misma pestaña, sabremos que el archivo está sin guardar
+              //Por lo que almacenaremos el nombre del archivo e incrementaremos un contador para saber que no está guardado
+              if (!textoFichero.equals(panelTAaux.textArea.getText())) {
+                  
+                  titulosArchivosNoGuardados[ficherosSinGuardar]=panelTAaux.fichero.getName();//Almacenando el nombre del archivo en el array
+                  ficherosSinGuardar++;
+                  
+                  
+              }//Fin del iF-EQUALS
+            
+            
+            
+             }//FIN DEL FOR
+            
+            String titulosTotal=""; //En esta variable almacenaremos cada nombre de archivo sin guardar, con un salto de linea, para que salgan a lo largo (si existe alguno)
+            
+            for (int i = 0; i < ficherosSinGuardar; i++) {
+            
+                titulosTotal+="--> "+titulosArchivosNoGuardados[i]+"\n";
+            
+             }
+            
+            
+            //Se comprobará si existe el fichero de configuración, si no existe, se creará uno por primera vez.
+            File fichero = new File("./dist/Config.conf");
+            if(!fichero.exists()){
+              JOptionPane.showMessageDialog(Panel_Pestanias.TP, "No existe ningun archivo de configuración.\n\nSe utilizará la configuración de la pestaña actual\ncomo \"TEMA\" predeterminado ", "Creando Configuración", JOptionPane.INFORMATION_MESSAGE);
+ 
+              //Ejecutando al metodo guardar configuracion
+              if(GuardarConfiguración()){
+                JOptionPane.showMessageDialog(Panel_Pestanias.TP, "Configuración GUARDADA con Éxito", "GUARDADO", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                 JOptionPane.showMessageDialog(Panel_Pestanias.TP, "Configuración NO GUARDADA", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }//Fin del If-Else
+            
+            }//Fin de comrpobar si existe fichero de configuración
+            
+             
+             
+             
+          
+            
+            
+            
+            //Si existe algun fichero sin guardar, se notificará al usuario para que los guarde manualmente
+            //Se le indicará de los nombres de cada uno de ellos.
+            if (ficherosSinGuardar>0) {
+
+                int valor = JOptionPane.showConfirmDialog(Panel_Pestanias.TP, "¿Desea SALIR sin GUARDAR?\n\nHay "+ficherosSinGuardar+" Archivo SIN GUARDAR:\n"+titulosTotal, "¿CERRAR PROGRAMA?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                if (valor == JOptionPane.YES_OPTION) {
+                    //SI el usuario eligio ACEPTAR, GUARDAREMOS EL "TP" EN EL ARCHIVO y  otras opciones y SALDREMOS DEL PROGRAMA
+                
+                    System.exit(0);
+                    
+                }//Fin del if valor==YES_OPTION
+                
+                //Si el usuario elige CANCELAR, no se cerrará el programa
+
+            }else{
+
+                System.exit(0);
+            }//Fin del IF-EQUALS
+
+}//Fin de confirmar salida    
+    
+  
+    
+ private boolean GuardarConfiguración() {
+
+      
+          //Declaramos objeto de configuración, segun si el archivo es nuevo o no se seteará este objeto
+        Configuracion config= null;
+                
+            try {
+            
+            File fichero = new File("./dist/Config.conf");
+            
+            if(!fichero.exists()){
+                fichero.createNewFile();
+                  config= new Configuracion(fuente, colorBackground, colorTexto, colorSeleccion, colorTextoSeleccionado);
+            }else{
+                fichero.delete();
+                System.gc();
+                fichero.createNewFile();
+                    config= new Configuracion(fuente, colorBackground, colorTexto, colorSeleccion, colorTextoSeleccionado);
+          
+            }
+            
+            ObjectOutputStream escritor;
+                //Si NO tiene registros, creamos "objeto" escritor con la Clase NORMAL. para escribir la cabecera del objeto.
+                try (FileOutputStream flujo = new FileOutputStream(fichero)) {
+                    //Si NO tiene registros, creamos "objeto" escritor con la Clase NORMAL. para escribir la cabecera del objeto.
+                    escritor = new ObjectOutputStream(flujo);
+                    escritor.writeObject(config);
+                    System.out.println("guardado");
+                    //Cerramos flujo y escritor
+                    flujo.close();
+                }
+                escritor.close();
+              
+
+          
+
+            //En este metodo no controlaremos el EOF, porque solo vamos a escribir y los va a ir añadiendo directamente al final 
+        } catch (IOException ioe) {
+            System.out.println("Error de Fichero");
+        } catch (Exception e) {
+            System.out.println(e.initCause(e));
+        }//Fin del TRY_CATCH
+  
+      return true;
+}   
+    
+  
+  
+    
+    
+    
+    
     ////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * ESTE ES EL Oyente para DETECTAR en QUÉ PESTAÑA se encuentra nuestro
@@ -219,15 +439,16 @@ public class ControladorVistaPrincipal {
             //Creando objeto de PanelTextAREA QUE APUNTA  al PanelTextArea que tenemos en LA PESTAÑA ACTUAL
             //Por lo tanto estaremos actuando directamente en la pestaña seleccionada
             try{
-            panelTA = (PanelTextArea) panelPestanias.TP.getSelectedComponent();
+             panelTA = (PanelTextArea) panelPestanias.TP.getSelectedComponent();
             indexPestana = panelPestanias.TP.getSelectedIndex();
             Recargar();
             }catch (Exception e){
-                System.out.println(e.getMessage());
+               // System.out.println(e.getMessage());
             }//Fin del tryCatch
            
             }
 
+        
     }//Fin oyenteCambioPestaña
 
     /**
@@ -262,15 +483,20 @@ public class ControladorVistaPrincipal {
 
             //Recuperamos la fuente correspondiente al TextArea de nuestro objeto PanelTextArea
             fuente = panelTA.textArea.getFont();
+            
             //Extraemos el nombre de la fuente y lo almacenamos en la variable que tenemos instanciada
             nombre_fuente = fuente.getName();
             //Y extraemos el tamaño de la fuente y lo almacenamos en la variable que tenemos instanciada
             tamanio_fuente = fuente.getSize();
+            //Extraemos el TIPO de la fuente y lo almacenamos.
+            tipo_fuente= fuente.getStyle();
 
-            //Ahora setearemos los comboBox con los datos Extraidos
-            panelMenuBar.comboBox.setSelectedItem(tamanio_fuente); //Agregaremos este primer elemento con el valor inicial que tendrá
+           
+            
+            //Ahora setearemos los comboBoxTamanio con los datos Extraidos
+            panelMenuBar.comboBoxTamanio.setSelectedItem(tamanio_fuente); //Agregaremos este primer elemento con el valor inicial que tendrá
             panelMenuBar.comboBoxStyle.setSelectedItem(nombre_fuente); //Agregaremos este primer elemento con el valor inicial que tendrá
-
+            panelMenuBar.comboBoxTipo.setSelectedIndex(tipo_fuente);//Le indicaremos que se seleccione el INDEX, ya que el Orden del index pertenece a los numeros correspondientes a los nombres del estilo de la letra
             //ACTIVAMOS los botones porque no Existirá ninguna pestaña abierta
             panelMenuBar.guardar.setEnabled(true);
             panelMenuBar.guardarComo.setEnabled(true);
@@ -278,7 +504,8 @@ public class ControladorVistaPrincipal {
             panelMenuBar.edicion.setEnabled(true);
             panelMenuBar.imprimir.setEnabled(true);
             panelMenuBar.personalizar.setEnabled(true);
-            panelMenuBar.comboBox.setEnabled(true);
+            panelMenuBar.comboBoxTamanio.setEnabled(true);
+             panelMenuBar.comboBoxTipo.setEnabled(true);
             panelMenuBar.comboBoxStyle.setEnabled(true);
        
         } else {
@@ -289,7 +516,8 @@ public class ControladorVistaPrincipal {
             panelMenuBar.edicion.setEnabled(false);
             panelMenuBar.imprimir.setEnabled(false);
             panelMenuBar.personalizar.setEnabled(false);
-            panelMenuBar.comboBox.setEnabled(false);
+            panelMenuBar.comboBoxTamanio.setEnabled(false);
+             panelMenuBar.comboBoxTipo.setEnabled(false);
             panelMenuBar.comboBoxStyle.setEnabled(false);
      
         }//Find el ifelse
@@ -297,8 +525,26 @@ public class ControladorVistaPrincipal {
     }//Fin del metodo Recargar
 
     ////////////////////////////////////////////////////////////////////////////////   
-    ////////LISTENERS de los COMBOBOX correspondientes a TAMAÑO y ESTILO////////////   
+    ////////LISTENERS de los COMBOBOX correspondientes a TIPO, TAMAÑO y ESTILO////////////   
     ////////////////////////////////////////////////////////////////////////////////  
+    
+        //Combobox de tamaño
+    class OyenteComboTipo implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+            //Almacenamos los datos del combobox en la variable instanciada, para utilizarla cuando sea necesario
+            tipo_fuente = panelMenuBar.comboBoxTipo.getSelectedIndex();
+
+            fuente = new Font(nombre_fuente, tipo_fuente, tamanio_fuente);
+            panelTA.textArea.setFont(fuente); // Coneste metodo realizamos el cambio de estilo a nuestro textarea del objeto de PanelTextArea correspondiente a la pestaña
+
+        }//Fin action performed
+    }//Fin del Oyente
+
+
+
     //Combobox de tamaño
     class OyenteComboTamanio implements ActionListener {
 
@@ -306,13 +552,13 @@ public class ControladorVistaPrincipal {
         public void actionPerformed(ActionEvent ae) {
             //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
             //Almacenamos los datos del combobox en la variable instanciada, para utilizarla cuando sea necesario
-            tamanio_fuente = Integer.parseInt(panelMenuBar.comboBox.getSelectedItem().toString());
+            tamanio_fuente = Integer.parseInt(panelMenuBar.comboBoxTamanio.getSelectedItem().toString());
 
-            fuente = new Font(nombre_fuente, Font.PLAIN, tamanio_fuente);
+            fuente = new Font(nombre_fuente, tipo_fuente, tamanio_fuente);
             panelTA.textArea.setFont(fuente); // Coneste metodo realizamos el cambio de estilo a nuestro textarea del objeto de PanelTextArea correspondiente a la pestaña
 
         }//Fin action performed
-    }//Fin del OyenteCOPIAR
+    }//Fin del Oyente
 
     //Combobox de estilo de fuente
     class OyenteComboStyle implements ActionListener {
@@ -324,31 +570,21 @@ public class ControladorVistaPrincipal {
             //Recogemos el estilo que el usuario elija en el panel, para SETEAR nuestro textArea con esa opción
             nombre_fuente = panelMenuBar.comboBoxStyle.getSelectedItem().toString();
 
-            fuente = new Font(nombre_fuente, Font.PLAIN, tamanio_fuente);
+            fuente = new Font(nombre_fuente, tipo_fuente, tamanio_fuente);
             panelTA.textArea.setFont(fuente); // sólo va a cambiar el tamaño a 12 puntos
 
         }//Fin action performed
-    }//Fin del OyenteCOPIAR
+    }//Fin del Oyente
 
     ////////////////////////////////////////////////////////////////////////////////    
     //Fin de los listeners de COMBOBOX   
-    class OyenteExportarConsulta implements ActionListener {
+    
 
-        @Override
-        public void actionPerformed(ActionEvent ae) {
-
-            //Agregamos a nuestra pestaña actual el area de texto recogida en el TextArea Estático (que solo se encuentra en CONSULTA)
-            panelTA.textArea.append(texAreaExportar.getText());
-        }
-
-    }
 
     ////////////////////////////////////////////////////////////////////////////////   
     //////// LISTENERS de los JCHECKBOX correspondientes al Menú BBDD   ////////////   
     ////////////////////////////////////////////////////////////////////////////////   
-    
-    
-    
+ 
       //Listener de BBDD-CONECTAR
     class OyenteBBDD_Conectar_Desconectar implements ActionListener {
 
@@ -359,7 +595,49 @@ public class ControladorVistaPrincipal {
          //INICIALIZANDO VISTAS Y CONTROLADORES DE LAS CONSULTAS, PASAR A UNA FUNCION SOLA, QUE SEA LLAMADA UNA SOLA VEZ
         //SE UTILIZARÁ UNA VARIABLE BOOLEANA PARA DETECTAR SI YA SE HA INICIADO o NO y respecto a esta, se modificará el botón y sus funciones
         if (!MetodosBBDD_Consultas.BBDD_Conectado){
+            
+            //Recuperamos los datos de la conexión almacenada en el archivo de configuración en caso de que exista
+            File fichero = new File("./dist/BBDD_Config.conf");
+            //Si el fichero existe, trataremos de leer todos los datos que deben existir y si todo está correcto, cambiaremos el valor de las variables BBDD que tenemos instanciada por las de nuestro archivo de configuración.
+            if(fichero.exists()){
+            
+           try {
+            FileReader flujo = new FileReader(fichero);//Creamos el objeto de filereader
+            Scanner lector = new Scanner(flujo); //y creamos el objeto scanner con el que leeremos la salida de nuestro fichero
+
+            //Si el fichero existe, leeremos de seguido todos los datos, en caso de error en el fichero, lo tomaremos como inexistente
+            lector.reset();//Reseteamos el (contador de lineas)
+          
+                String BBDDurl_aux=lector.nextLine();
+                String BBDDpuerto_aux=lector.nextLine();
+                String BBDDname_aux=lector.nextLine();
+                String BBDDusuario_aux=lector.nextLine();
+                String BBDDpass_aux=lector.nextLine();
+            
+            //Cerramos el archivo
+            lector.close();
+
+            //Encaso de que todo haya ido bien, Setearemos los datos instanciados de la conexion con los datos Almacenados en nuestro archivo
+            BBDDurl = BBDDurl_aux;
+            BBDDpuerto = BBDDpuerto_aux;
+            BBDDname = BBDDname_aux;
+            BBDDusuario = BBDDusuario_aux;
+            BBDDpass = BBDDpass_aux;      
+                    
+        //EN CASO DE PRODUCIRSE UN ERROR TOMAREMOS EL ARCHIVO COMO INVÄLIDO  
+        } catch (IOException ioe) {
+            ioe.getMessage();
+        } catch (Exception e) {
+            e.getMessage();
+        }//Fin del Try-Catch
+
+            //Si no existe el archivo, comprenderemos que existe un cambio   
+            }
+            
+            
+      //////////////////////////////////////////////////////////////////////////////      
             Vista_LOGIN_BBDD login = new Vista_LOGIN_BBDD(vistaPrincipal, true);
+            login=null;
             if (BBDDaceptar==true){
                 metodos = new MetodosBBDD_Consultas();
             }
@@ -368,13 +646,13 @@ public class ControladorVistaPrincipal {
         //Para ejecutarse esta primera parte, la conexion debe ser satisfactoria, no haber pulsado a cancelar y el boton debe marcar "CONECTAR"
         if ( BBDDaceptar==true && MetodosBBDD_Consultas.BBDD_Conectado &&  panelMenuBar.conectar_desconectar.getText().equals("CONECTAR")){
             vistaInsertar = new VistaBBDD_Insertar();
-            ControladorBBDD_Insertar Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar, metodos);
+            Controlador_Insertar = new ControladorBBDD_Insertar(vistaInsertar, metodos);
             vistaConsultar = new VistaBBDD_Consultar();
-            ControladorBBDD_Consultar Controlador_Consultar = new ControladorBBDD_Consultar(vistaConsultar, metodos);
+            Controlador_Consultar = new ControladorBBDD_Consultar(vistaConsultar, metodos);
             vistaEliminar = new VistaBBDD_Eliminar();
-            ControladorBBDD_Eliminar Controlador_Eliminar = new ControladorBBDD_Eliminar(vistaEliminar, metodos);
+            Controlador_Eliminar = new ControladorBBDD_Eliminar(vistaEliminar, metodos);
             vistaModificar = new VistaBBDD_Modificar();
-            ControladorBBDD_Modificar Controlador_Modificar = new ControladorBBDD_Modificar(vistaModificar, metodos);
+            Controlador_Modificar = new ControladorBBDD_Modificar(vistaModificar, metodos);
             panelMenuBar.conectar_desconectar.setText("DESCONECTAR");
             
             //HABILITANDO BOTONES DE BBDD
@@ -382,13 +660,132 @@ public class ControladorVistaPrincipal {
              panelMenuBar.consultar.setEnabled(true);
              panelMenuBar.modificar.setEnabled(true);
              panelMenuBar.eliminar.setEnabled(true);
-             
+                          
              JOptionPane.showMessageDialog(panelMenuBar.conectar_desconectar, "Conectado CORRECTAMENTE a la BBDD", "Conexión Satisfactoria", JOptionPane.INFORMATION_MESSAGE);
         
+///////////////////////////////////////////////////////////////////////////////////////////             
+
+            
+            boolean cambios=false; //Variable que controlará siexiste un cambio
+            File fichero = new File("./dist/BBDD_Config.conf");//Creamos objeto de File (con la ruta del fichero de configuración que debería existir)
+            
+            if(fichero.exists()){
+            
+           try {
+            
+            FileReader flujo = new FileReader(fichero);
+            Scanner lector = new Scanner(flujo);
+
+            //Si el fichero existe, leeremos de seguido todos los datos, en caso de error en el fichero, lo tomaremos como inexistente
+            lector.reset();//Reseteamos el (contador de lineas)
+                //Comprobaremos si los datos almacenados son iguales a los ultimos que ha introducido el usuario, en caso de ser distintos pondremos la VARIABLE "cambios" a TRUE
+                if (!BBDDurl.equals(lector.nextLine())) {
+                    cambios=true;
+                }
+                if (!BBDDpuerto.equals(lector.nextLine())) {
+                    cambios=true;
+                }        
+                if (!BBDDname.equals(lector.nextLine())) {
+                    cambios=true;
+                }
+               if (!BBDDusuario.equals(lector.nextLine())) {
+                    cambios=true;
+                }
+                if (!BBDDpass.equals(lector.nextLine())) {
+                    cambios=true;
+                }
+
+            
+            //Cerramos el archivo
+            lector.close();
+            
+        //EN CASO DE PRODUCIRSE UN ERROR TOMAREMOS EL ARCHIVO COMO INVÄLIDO  
+        } catch (IOException ioe) {
+            cambios=true;
+        } catch (Exception e) {
+            cambios=true;
+        }//Fin del Try-Catch
+
+            //Si no existe el archivo, comprenderemos que existe un cambio   
+            }else{
+                cambios=true;
+            }
+
+            
+            //Comprobamos se existen cambios respecto a la conexión y en caso de existir ofreceremos la opción de guardar la configuración como predeterminada
+            if(cambios==true){
+              //Preguntamos al usuario si desea almacenar los datos de la nueva conexion en caso de ser diferente a las almacenadas, o no existir archivo de configuración
+                int almacenar= JOptionPane.showConfirmDialog(panelMenuBar.conectar_desconectar, "¿Desea GUARDAR estos datos de conexión como PREDETERMINADOS?", "¿Establecer como predeterminado?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (almacenar==JOptionPane.YES_OPTION){
+        try {
+            //Crea un objeto File asociado al fichero fichSec.txt
+            File fichero_guardar = new File("./dist/BBDD_Config.conf");
+            //Crea un flujo de caracteres para grabar
+            FileWriter flujo_guardar = new FileWriter(fichero_guardar);//Si existe el archivo, reescribirá su contenido
+            // Escribe los campos cada uno en una linea
+            try (
+                //Enlaza el flujo de salida con la clase PrintWrite que tiene el metodo println
+                PrintWriter escritor = new PrintWriter(flujo_guardar)) {
+                // Escribe los campos cada uno en una linea
+                //   String lineaAlta=matricula+" "+marca+" "+modelo+" "+dniTitular+" "+nombreTitular;
+                escritor.println(BBDDurl);
+                escritor.println(BBDDpuerto);
+                escritor.println(BBDDname);
+                escritor.println(BBDDusuario);
+                escritor.println(BBDDpass);
+                
+                JOptionPane.showMessageDialog(panelMenuBar.conectar_desconectar, "Los Nuevos DATOS fueron GUARDADOS correctamente", "Datos Guardados", JOptionPane.INFORMATION_MESSAGE);
+                
+                escritor.close();
+                flujo_guardar.close();
+                
+            }//Fin del Try anidado
+
+        } catch (IOException ioe) {
+            JOptionPane.showMessageDialog(panelMenuBar.conectar_desconectar, "Los DATOS NO fueron GUARDADOS", "ERROR", JOptionPane.WARNING_MESSAGE);
+     
+        } catch (Exception e) {
+              JOptionPane.showMessageDialog(panelMenuBar.conectar_desconectar, "Los DATOS NO fueron GUARDADOS", "ERROR", JOptionPane.WARNING_MESSAGE);
+     
+        }   
+     
+     
+     
+     
+             }//Fin de If almacenar==YES
+            
+            }//Find el IF-Cambios
+             
+             
+             
+           
+        
+             
+             
+             
+             
+             
+             
+             
+//////////////////////////////////////////////////////////////////////////////////////////             
+             
+             
+             
         //Si la conxion es erronea o ya se habia iniciado sesion, procedemos a desconectarnos y cambiar el nombre del boton a "conectar"
         }else if (BBDDaceptar==true && MetodosBBDD_Consultas.BBDD_Conectado &&  panelMenuBar.conectar_desconectar.getText().equals("DESCONECTAR")) {
+            
+            //ELIMINAMOS TODOS LOS OBJETOS QUE SE HUBIESEN CREADO.
+            MetodosBBDD_Consultas.BBDD_Conectado= false;
             panelMenuBar.conectar_desconectar.setText("CONECTAR");
-            MetodosBBDD_Consultas.BBDD_Conectado=false;
+            metodos = null;
+            vistaInsertar = null;
+            vistaConsultar = null;
+            vistaEliminar = null;
+            vistaModificar = null;
+            Controlador_Insertar = null;
+            Controlador_Consultar = null;
+            Controlador_Modificar = null;
+            Controlador_Eliminar = null;
             //DESHABILITANDO BOTONES DE BBDD
              panelMenuBar.insertar.setEnabled(false);
              panelMenuBar.consultar.setEnabled(false);
@@ -398,7 +795,7 @@ public class ControladorVistaPrincipal {
              JOptionPane.showMessageDialog(panelMenuBar.conectar_desconectar, "Desconectado de la BBDD", "Desconexión Satisfactoria", JOptionPane.INFORMATION_MESSAGE);
         }//Fin del ELSE
             
-        }
+        }//Fin del actionPerformed
 
     }//Fin del Oyente CONECTAR
     
@@ -432,9 +829,9 @@ public class ControladorVistaPrincipal {
 
         @Override
         public void itemStateChanged(ItemEvent ie) {
-
+            
             if (panelMenuBar.consultar.isSelected()) {
-
+                 
                 vistaConsultar.setVisible(true);
                 vistaConsultar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.consultar));
 
@@ -452,9 +849,9 @@ public class ControladorVistaPrincipal {
 
         @Override
         public void itemStateChanged(ItemEvent ie) {
-
+         
             if (panelMenuBar.modificar.isSelected()) {
-
+                
                 vistaModificar.setVisible(true);
                 vistaModificar.addComponentListener(new VentanasBBDD_Cerrar(panelMenuBar.modificar));
 
@@ -536,7 +933,7 @@ public class ControladorVistaPrincipal {
             panelPestanias = panelPestanias.PestaniaTextoNueva();
             //JPOPUPMENU Agregamos los botones el JPopupMenu y les pasamos su correspondiente Listener
             panelPestanias.TP.setSelectedIndex(panelPestanias.TP.getTabCount() - 1);
-
+            Recargar();
         }//Fin action performed
     }//Fin del OyenteCOPIAR
 
@@ -577,7 +974,7 @@ public class ControladorVistaPrincipal {
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(Panel_Pestanias.TP, "Se produjo un error", "ERROR", JOptionPane.ERROR_MESSAGE);
             }//Find el TryCatch
-
+            Recargar();
         }//Fin action performed
     }//Fin del OyenteABRIR
 
@@ -588,10 +985,12 @@ public class ControladorVistaPrincipal {
         public void actionPerformed(ActionEvent ae) {
             //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
             String texto = panelTA.textArea.getText();
+               
+                
             try {
                 panelTA.fichero = metodosPrincipal.Guardar(panelTA.fichero, texto);
                 JOptionPane.showMessageDialog(panelTA.textArea, "El ARCHIVO fue GUARDADO con Éxito", "Archivo Guardado", JOptionPane.INFORMATION_MESSAGE);
-
+                
             } catch (HeadlessException e) {
                 JOptionPane.showMessageDialog(panelTA.textArea, "El ARCHIVO NO fue guardado ", "ERROR", JOptionPane.INFORMATION_MESSAGE);
 
@@ -888,7 +1287,7 @@ public class ControladorVistaPrincipal {
         @Override
         public void actionPerformed(ActionEvent ae) {
             //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
-            System.exit(0);
+            AlertarSalida();
         }//Fin action performed
     }//Fin del OyenteCOPIAR
 
@@ -970,6 +1369,51 @@ public class ControladorVistaPrincipal {
 
         }//Fin action performed
     }//Fin del OyenteCOPIAR
+    
+    
+    class OyenteGuardarConfiguracion implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            
+            //Ejecutando al metodo guardar configuracion
+            if(GuardarConfiguración()){
+                JOptionPane.showMessageDialog(Panel_Pestanias.TP, "Configuración GUARDADA con Éxito", "GUARDADO", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                 JOptionPane.showMessageDialog(Panel_Pestanias.TP, "Configuración NO GUARDADA", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        }//Find el actionPerformed
+        
+    }//Fin de Oyente GUARDAR CONFIDURACION    
+    
+    
+    //BOTON ESTATICO PARA TRAER LA CONSULTA RECUPERADA EN "BBDD_CONSULTAR" A LA PESTAÑA SELECCIONADA
+    class OyenteExportarConsulta implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+
+            try{
+            //Agregamos a nuestra pestaña actual el area de texto recogida en el TextArea Estático (que solo se encuentra en CONSULTA)
+            panelTA.textArea.append(texAreaExportar.getText());
+            }catch (Exception e){
+                //Controlamos si existe alguna pestaña abierta, si no existe, la abriremos
+                panelPestanias = panelPestanias.PestaniaTextoNueva();
+                panelTA.textArea.append(texAreaExportar.getText());
+            
+            }//Fin del Try catch
+            
+            }//Fin del actionPerformed
+
+    }//Fin de exportar consulta
+    
+    
+    
+  
+    
+    
+    
 
 }//Fin del controlador principal
 

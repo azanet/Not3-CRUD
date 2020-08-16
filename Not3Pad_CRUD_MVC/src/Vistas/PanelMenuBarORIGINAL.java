@@ -23,7 +23,7 @@ import javax.swing.JPanel;
  * principal"
  *
  */
-public class PanelMenuBar extends JPanel {
+public class PanelMenuBarORIGINAL extends JPanel {
 
     // public JPanel panelPrincipal;
     private JMenuBar menuBar;
@@ -34,10 +34,10 @@ public class PanelMenuBar extends JPanel {
     public JMenuItem conectar_desconectar;
     public static JCheckBox  insertar, consultar, modificar, eliminar;
 
-    public JMenuItem colorBackground, colorFuente, colorSeleccion, colorTextoSeleccionado, guardarConfiguracion;
+    public JMenuItem colorBackground, colorFuente, colorSeleccion, colorTextoSeleccionado;
     public JComboBox comboBoxTamanio, comboBoxStyle, comboBoxTipo;
 
-    public PanelMenuBar() {
+    public PanelMenuBarORIGINAL() {
 
         Iniciar();
     }//Find el constructor
@@ -82,7 +82,6 @@ public class PanelMenuBar extends JPanel {
         this.colorFuente = new JMenuItem("Color de Fuente");
         this.colorSeleccion = new JMenuItem("Color de Selección");
         this.colorTextoSeleccionado = new JMenuItem("Color de Texto Seleccionado");
-        this.guardarConfiguracion = new JMenuItem("Guardar \"TEMA\" como Predeterminado");
 
         this.comboBoxTamanio = new JComboBox();
         this.comboBoxTipo = new JComboBox();
@@ -100,32 +99,32 @@ public class PanelMenuBar extends JPanel {
         menuBar.setLayout(null);
 
         //Agregamos botones al JMenuBar
-        archivo.setBounds(0, 0, 60, 20);
+        archivo.setBounds(0, 0, 65, 20);
         menuBar.add(archivo);
 
-        edicion.setBounds(60, 0, 60, 20);
+        edicion.setBounds(65, 0, 63, 20);
         menuBar.add(edicion);
 
-        imprimir.setBounds(120, 0, 65, 20);
+        imprimir.setBounds(128, 0, 65, 20);
         menuBar.add(imprimir);
 
-        bbdd.setBounds(185, 0, 50, 20);
+        bbdd.setBounds(193, 0, 53, 20);
         menuBar.add(bbdd);
 
-        personalizar.setBounds(235, 0, 90, 20);
+        personalizar.setBounds(246, 0, 97, 20);
         menuBar.add(personalizar);
 
-        ayuda.setBounds(325, 0, 52, 20);
+        ayuda.setBounds(343, 0, 52, 20);
         menuBar.add(ayuda);
 
-        comboBoxTipo.setBounds(377, 0, 77, 20);
+        comboBoxTipo.setBounds(395, 0, 77, 20);
         menuBar.add(comboBoxTipo);
         
-        comboBoxTamanio.setBounds(454, 0, 52, 20);
+        comboBoxTamanio.setBounds(472, 0, 52, 20);
         menuBar.add(comboBoxTamanio);
         
         //        setPreferredSize(new Dimension(410, 50));
-        comboBoxStyle.setBounds(506, 0, 148, 20);
+        comboBoxStyle.setBounds(524, 0, 148, 20);
         menuBar.add(comboBoxStyle);
 
         //Agregamos CADA BOTÓN a su "Menú" Correspondiente
@@ -171,7 +170,6 @@ public class PanelMenuBar extends JPanel {
         personalizar.addSeparator();
         personalizar.add(colorSeleccion);
         personalizar.add(colorTextoSeleccionado);
-        personalizar.add(guardarConfiguracion);
 
         //Menú Ayuda
         ayuda.add(acercaDe);

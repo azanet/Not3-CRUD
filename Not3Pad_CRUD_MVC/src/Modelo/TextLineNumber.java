@@ -30,7 +30,7 @@ public class TextLineNumber extends JPanel
 	public final static float CENTER = 0.5f;
 	public final static float RIGHT = 1.0f;
 
-	private final static Border OUTER = new MatteBorder(0, 0, 0, 2, Color.GRAY);
+	private final static Border OUTER = new MatteBorder(0, 0, 0, 2, Color.gray);
 
 	private final static int HEIGHT = Integer.MAX_VALUE - 1000000;
 
@@ -81,7 +81,7 @@ public class TextLineNumber extends JPanel
 
 		setBorderGap( 5 );
 		setCurrentLineForeground( Color.RED );
-		setDigitAlignment( RIGHT );
+		setDigitAlignment( LEFT );
 		setMinimumDisplayDigits( minimumDisplayDigits );
 
 		component.getDocument().addDocumentListener(this);

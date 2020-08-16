@@ -8,7 +8,6 @@ package not3pad;
 import Controlador.ControladorVistaPrincipal;
 import Modelo.MetodosPrincipal;
 import Vistas.VistaPrincipal;
-import javax.swing.JFrame;
 
 /**
  *
@@ -25,8 +24,23 @@ public class not3Pad {
         MetodosPrincipal metodosPrincipal =new MetodosPrincipal();
         ControladorVistaPrincipal controladorPrincipal;
         controladorPrincipal= new ControladorVistaPrincipal(vistaPrincipal, metodosPrincipal);
-        vistaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+  //      vistaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        //En el controladorVistaPrincipal, se encuentra un método que controlará la salida de nuestro progrma
+        // guardará un objeto de PanelPestaña que recuperará más tarde cuanmdo el programa sea abierto
+        //Controlará si los archivos se encuentran guardados, etc.
+        
+         
+        
+        
+        
+        
         
     }//Fin del bloque Main
+    
+    
+   
+    
+   
     
 }//Fin de la clase principal

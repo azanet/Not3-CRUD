@@ -106,7 +106,7 @@ public class ControladorBBDD_Insertar {
         if (grupoSeleccionado > 0) {
             //DESBLOQEUAR CAMPO DE ARTICULO
 
-//OPCIONAL+++Poner el comboBox de articulo A NINGUN SELECCIONADO
+//OPCIONAL+++Poner el comboBoxTamanio de articulo A NINGUN SELECCIONADO
             vista.tituloGrupoNuevo.setEnabled(false);
             vista.textFieldGrupoNuevo.setEnabled(false);
             vista.BotonAltaGrupo.setEnabled(false);

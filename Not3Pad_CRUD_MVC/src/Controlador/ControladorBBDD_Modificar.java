@@ -121,7 +121,7 @@ public class ControladorBBDD_Modificar {
 
 ////////ESTE METODO ES PARA REFRESCAR EL COMBOBOX DE DESCRIPCION /////////////////////////
     //para cada Descripcion agregada, almacenaremos el ID de esta en un HASHMAP como VALUE
-    // y como KEY se utilizará el metodo ".getItemCount()" Para saber en qué posición del comboBox se ha agregado
+    // y como KEY se utilizará el metodo ".getItemCount()" Para saber en qué posición del comboBoxTamanio se ha agregado
     //Luego utilizaremos el metodo "getSelectedIndex()+1" para pasarselo a nuestro Hashmap cuando el usuario quiera
     //interactuar con las descripciones, ya sea para enviar la modificación o para obtener la descripcion
     //ya que al obtener el ID realizaremos la peticion a la BBDD con esta, para hacelo todo mas sencillo

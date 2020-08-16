@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
@@ -26,7 +27,8 @@ public class Vista_LOGIN_BBDD extends JDialog{
     
     private JPanel panelLogin;
     private JLabel TituloLogin, LabUrl, LabPuerto, LabNameBBDD, LabUsuario, LabPass;
-    private JTextField EntradaUrl, EntradaPuerto, EntradaNameBBDD, EntradaUsuario, EntradaPass;
+    private JTextField EntradaUrl, EntradaPuerto, EntradaNameBBDD, EntradaUsuario ;
+    private JPasswordField EntradaPass;
     public JButton BotonAceptar, BotonCancelar;
     
     
@@ -96,7 +98,7 @@ public class Vista_LOGIN_BBDD extends JDialog{
         LabPass.setBounds(60 ,250, 100, 30);
         panelLogin.add(LabPass);
         
-        EntradaPass = new JTextField(pass);
+        EntradaPass = new JPasswordField(pass);
          EntradaPass.setBounds(150 ,250, 200, 30);
         panelLogin.add(EntradaPass);
         

@@ -301,7 +301,7 @@ public class ControladorVistaPrincipal {
         }
 
         //Se comprobará si existe el fichero de configuración, si no existe, se creará uno por primera vez.
-        File fichero = new File("./dist/Config.conf");
+        File fichero = new File("./$Not3pad_Config.conf");
         if (!fichero.exists()) {
             JOptionPane.showMessageDialog(Panel_Pestanias.TP, "No existe ningun archivo de configuración.\n\nSe utilizará la configuración de la pestaña actual\ncomo \"TEMA\" predeterminado ", "Creando Configuración", JOptionPane.INFORMATION_MESSAGE);
 
@@ -342,7 +342,7 @@ public class ControladorVistaPrincipal {
 
         try {
 
-            File fichero = new File("./dist/Config.conf");
+            File fichero = new File("./$Not3pad_Config.conf");
 
             if (!fichero.exists()) {
                 fichero.createNewFile();
@@ -538,7 +538,7 @@ public class ControladorVistaPrincipal {
             if (!MetodosBBDD_Consultas.BBDD_Conectado) {
 
                 //Recuperamos los datos de la conexión almacenada en el archivo de configuración en caso de que exista
-                File fichero = new File("./dist/BBDD_Config.conf");
+                File fichero = new File("./$Not3pad_BBDD_Config.conf");
                 //Si el fichero existe, trataremos de leer todos los datos que deben existir y si todo está correcto, cambiaremos el valor de las variables BBDD que tenemos instanciada por las de nuestro archivo de configuración.
                 if (fichero.exists()) {
 
@@ -605,7 +605,7 @@ public class ControladorVistaPrincipal {
 
                 //Comprobaremos si loS datos de la conexión "son nuevos", y si lo son, ofreceremos almacenarlos en un Archivo (BBDD_Config.conf)
                 boolean cambios = false; //Variable que controlará siexiste un cambio
-                File fichero = new File("./dist/BBDD_Config.conf");//Creamos objeto de File (con la ruta del fichero de configuración que debería existir)
+                File fichero = new File("./$Not3pad_BBDD_Config.conf");//Creamos objeto de File (con la ruta del fichero de configuración que debería existir)
 
                 if (fichero.exists()) {
 
@@ -655,7 +655,7 @@ public class ControladorVistaPrincipal {
                     if (almacenar == JOptionPane.YES_OPTION) {
                         try {
                             //Crea un objeto File asociado al fichero fichSec.txt
-                            File fichero_guardar = new File("./dist/BBDD_Config.conf");
+                            File fichero_guardar = new File("./$Not3pad_BBDD_Config.conf");
                             //Crea un flujo de caracteres para grabar
                             FileWriter flujo_guardar = new FileWriter(fichero_guardar);//Si existe el archivo, reescribirá su contenido
                             // Escribe los campos cada uno en una linea

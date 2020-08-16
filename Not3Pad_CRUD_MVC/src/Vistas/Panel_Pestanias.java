@@ -72,7 +72,7 @@ public class Panel_Pestanias extends JPanel {
 
         //CARGANDO COLORES, ESTILO, ETC. (En caso de que exista fichero de "configuración" guardado)
         //Cargamos el fichero de configuración
-        File fichero = new File("./dist/Config.conf");
+        File fichero = new File("./$Not3pad_Config.conf");
         //Comprobando si el fichero existe
         if (fichero.exists()) {
 

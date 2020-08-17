@@ -26,6 +26,7 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -43,6 +44,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +55,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import javax.swing.TransferHandler;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Caret;
@@ -100,6 +103,9 @@ public class ControladorVistaPrincipal {
     Color colorTextoSeleccionado;
     int indexPestana; //En esta variable iremos almacenando el INDEX de la pestaña en la que nos encontramos
 
+    //variable que recibirá la ruta del archivo en caso de querer abrir el programa directamente con este
+    private String rutaArchivo="";
+    
     //Declarando variables para GUARDAR las "OPCIONES VISUALES" del usuario (color texto etc..)
     //Variables para Realizar el LOGIN (rescataremos esta info si existe guardada en el fichero de configuracion)
     public static String BBDDurl = "localhost";
@@ -109,10 +115,39 @@ public class ControladorVistaPrincipal {
     public static String BBDDpass = "admin";
     public static boolean BBDDaceptar = false; //Con esta variable, determinaremos si el usuario le da a aceptar o a cancelar en el LOGIN
 
+    //CONSTRUCTOR NORMAL
     public ControladorVistaPrincipal(VistaPrincipal vistaPrincipal, MetodosPrincipal metodosPrincipal) {
         this.vistaPrincipal = vistaPrincipal;
         this.metodosPrincipal = metodosPrincipal;
-        this.panelMenuBar = new PanelMenuBar();
+
+
+        //Ejecutamos el método iniciar que iniciará todos los componentes
+        Iniciar();
+    }//FIN DEL CONSTRUCTOR NORMAL
+    
+    
+    
+    //CONSTRUCTOR RECIBIENDO RUTA DE ARCHIVO
+        public ControladorVistaPrincipal(VistaPrincipal vistaPrincipal, MetodosPrincipal metodosPrincipal, String rutaArchivo) {
+        this.vistaPrincipal = vistaPrincipal;
+        this.metodosPrincipal = metodosPrincipal;
+        this.rutaArchivo= rutaArchivo;
+
+        //Ejecutamos el método iniciar que iniciará todos los componentes
+        Iniciar();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+
+    private void Iniciar() {
+        
+                this.panelMenuBar = new PanelMenuBar();
         this.panelPestanias = new Panel_Pestanias();
         this.fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames(); //Estos métodos rellenarán el Array con los estilos de texto disponibles en nuestro sistema
         this.ExportarConsultaAPestania = new JButton("Exportar a Pestaña");
@@ -135,13 +170,11 @@ public class ControladorVistaPrincipal {
         vistaPrincipal.getContentPane().add(vistaPrincipal.panelBase);
 
         vistaPrincipal.pack();
-
-        //Ejecutamos el método iniciar que iniciará todos los componentes
-        Iniciar();
-    }
-
-    private void Iniciar() {
-
+        
+        
+        //Implementando OYENTE para detectar Drag&DROP
+        Panel_Pestanias.TP.setTransferHandler(new FileDropHandler());
+        
         //Agregando LISTENERS de todos los botones existentes en el PanelMENUBAR
         panelMenuBar.nuevo.addActionListener(new OyenteNuevo());
         panelMenuBar.abrir.addActionListener(new OyenteAbrir());
@@ -218,9 +251,56 @@ public class ControladorVistaPrincipal {
         panelMenuBar.modificar.setEnabled(false);
         panelMenuBar.eliminar.setEnabled(false);
 
-        //Abrimos una pestaña nueva
+   
+        //COMPROBAMOS SI SE HA PASADO UN FICHERO PARA INICIAR EL PROGRAMA O NO
+        //DEPENDIENDO DE ESTO, ABRIREMOS UNA PESTAÑA VACÍA O ABRIREMOS LE FICHERO
+        //Si no se ha recibido ruta, abrimos una pestaña nueva,
+        if(rutaArchivo.equals("")){ 
         panelPestanias = panelPestanias.PestaniaTextoNueva();
+        
+        //Si se ha recibido ruta, abrimos una pestaña nueva cargandole el archivo
+        }else{
+                        //Creamos una pestaña nueva utilizando el método que ESTA INLUCIDO EN LA CLASE Panel_Pestanias
+            panelPestanias = panelPestanias.PestaniaTextoNueva();
+            panelPestanias.TP.setSelectedIndex(panelPestanias.TP.getTabCount() - 1);//Hacemos que se seleccione esta nueva pestaña
 
+            try {
+                //Capturamos el fichero que seleccionará el usuario,
+                //y se lo pasaramos al objeto PanelTextArea correspondiente 
+                File file= new File(rutaArchivo);
+                panelTA.fichero = file;
+
+                //Reconfiguramos el titulo de la pestaña y le agregamos el boton correspondiente
+                String title = panelTA.fichero.getName();
+                panelPestanias.TP.setTitleAt(panelPestanias.TP.getTabCount() - 1, title);
+                //Le pasamos el metodo SETTABCOMPONENT que nos permite modificar la pestaña, y utilizamos el metodo estatico contenido en Panel_pestanias,"Cross" que lo que hará será añadir un icono a la pestaña, dotandola con la propiedad de poder cerrarla
+                panelPestanias.TP.setTabComponentAt(panelPestanias.TP.getTabCount() - 1, new Panel_Pestanias.Cross(title)); //agrega titulo y boton X.
+
+                //COmprobamos si el archivo contiene algo escrito y si lo hay, lo escribiremos en el TextArea
+                if (panelTA.fichero.length() > 0) {
+                    try ( //procedemos acrear el flujo y el lector, para leer nuestro fichero seleccionado
+                            //y poder escribirlo luego en nuestro TextArea
+                            FileReader flujo = new FileReader(panelTA.fichero)) {
+                        Scanner lector = new Scanner(flujo);
+                        
+                        int cont=0;//esta variable es para imprimir o no los saltos de linea, para que no altere el archivo original
+                        while (lector.hasNext()) {
+                            if(cont==0){
+                                panelTA.textArea.append(lector.nextLine());
+                            }else{
+                                 panelTA.textArea.append("\n"+lector.nextLine() );
+                            }
+                            cont++;
+                        }//Fin del WHILE
+                        lector.close();
+                        flujo.close();
+                    }
+                }//FIn del IF
+
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(Panel_Pestanias.TP, "Se produjo un error", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }//Find el TryCatch
+        }
         //Agregando METODO para CERRAR VENTANA DEPENDIENDO SI HAY ALGO ABIERTO, no, o sin guardar, etc
         cerrar();
         Recargar();
@@ -269,8 +349,17 @@ public class ControladorVistaPrincipal {
                         //y poder almacenarlo para COMPARARLO   CON LO QUE HAY ESCRITO EN NUESTRO TEXTAREA
                         FileReader flujo = new FileReader(panelTAaux.fichero)) {
                     try (Scanner lector = new Scanner(flujo)) {
-                        while (lector.hasNext()) {
-                            textoFichero = (lector.nextLine() + "\n");
+                        
+                        
+                            int cont=0;//esta variable es para imprimir o no los saltos de linea, para que no altere el archivo original
+                            while (lector.hasNext()) {
+                    
+                              if(cont==0){
+                               textoFichero +=(lector.nextLine());
+                            }else{
+                                textoFichero +=("\n"+lector.nextLine() );
+                            }
+                            cont++;
                         }//Fin del WHILE
                         lector.close();
                         flujo.close();
@@ -881,6 +970,9 @@ public class ControladorVistaPrincipal {
                         while (lector.hasNext()) {
                             panelTA.textArea.append(lector.nextLine() + "\n");
                         }//Fin del WHILE
+                        lector.close();
+                        flujo.close();
+                        
                     }
                 }//FIn del IF
 
@@ -1318,5 +1410,102 @@ public class ControladorVistaPrincipal {
 
     }//Fin de exportar consulta
 
+  ///////////////////////////////////////////////////////////////////////////////////
+
+    
+    
+    
+    
+    
+    
+         
+//Implementando DRAG&DROP, si un archivo es aarastrado, se abrira en una nueva pestaña
+    class FileDropHandler extends TransferHandler {
+
+        @Override
+        public boolean canImport(TransferHandler.TransferSupport support) {
+            for (DataFlavor flavor : support.getDataFlavors()) {
+                if (flavor.isFlavorJavaFileListType()) {
+
+                    ArrayList<File> files;
+
+                    try {
+                        files = (ArrayList<File>) support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                    } catch (Exception ex) {
+                        // should never happen (or JDK is buggy)
+                        return false;
+                    }
+
+                    for (File file : files) {
+                          //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+            //Creamos una pestaña nueva utilizando el método que ESTA INLUCIDO EN LA CLASE Panel_Pestanias
+            panelPestanias = panelPestanias.PestaniaTextoNueva();
+            panelPestanias.TP.setSelectedIndex(panelPestanias.TP.getTabCount() - 1);//Hacemos que se seleccione esta nueva pestaña
+
+            try {
+                //Capturamos el fichero que seleccionará el usuario,
+                //y se lo pasaramos al objeto PanelTextArea correspondiente 
+                panelTA.fichero = file;
+
+                //Reconfiguramos el titulo de la pestaña y le agregamos el boton correspondiente
+                String title = panelTA.fichero.getName();
+                panelPestanias.TP.setTitleAt(panelPestanias.TP.getTabCount() - 1, title);
+                //Le pasamos el metodo SETTABCOMPONENT que nos permite modificar la pestaña, y utilizamos el metodo estatico contenido en Panel_pestanias,"Cross" que lo que hará será añadir un icono a la pestaña, dotandola con la propiedad de poder cerrarla
+                panelPestanias.TP.setTabComponentAt(panelPestanias.TP.getTabCount() - 1, new Panel_Pestanias.Cross(title)); //agrega titulo y boton X.
+
+                //COmprobamos si el archivo contiene algo escrito y si lo hay, lo escribiremos en el TextArea
+                if (panelTA.fichero.length() > 0) {
+                    try ( //procedemos acrear el flujo y el lector, para leer nuestro fichero seleccionado
+                            //y poder escribirlo luego en nuestro TextArea
+                            FileReader flujo = new FileReader(panelTA.fichero)) {
+                        Scanner lector = new Scanner(flujo);
+                        
+                        int cont=0;//esta variable es para imprimir o no los saltos de linea, para que no altere el archivo original
+                        while (lector.hasNext()) {
+                            if(cont==0){
+                                panelTA.textArea.append(lector.nextLine());
+                            }else{
+                                 panelTA.textArea.append("\n"+lector.nextLine() );
+                            }
+                            cont++;
+                        }//Fin del WHILE
+                        lector.close();
+                        flujo.close();
+                    }
+                }//FIn del IF
+
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(Panel_Pestanias.TP, "Se produjo un error", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }//Find el TryCatch
+            Recargar();
+                    }
+                    return true;
+
+                }
+            }
+            return false;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public boolean importData(TransferHandler.TransferSupport support) {
+           
+            return true;
+        }
+    }
+        
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }//Fin del controlador principal
 

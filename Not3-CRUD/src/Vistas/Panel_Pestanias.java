@@ -110,6 +110,7 @@ public class Panel_Pestanias extends JPanel {
 
         }//Fin de IF-FICHERO-EXIST
 
+        
         return this;
     }//Fin del metodo crear pestaña nueva
 
@@ -179,8 +180,16 @@ public class Panel_Pestanias extends JPanel {
                         //y poder almacenarlo para COMPARARLO   CONLO QUE HAY ESCRITYO EN NUESTRO TEXTAREA
                         FileReader flujo = new FileReader(panelTAaux.fichero)) {
                     try (Scanner lector = new Scanner(flujo)) {
-                        while (lector.hasNext()) {
-                            textoFichero = (lector.nextLine() + "\n");
+                        
+                          int cont=0;//esta variable es para imprimir o no los saltos de linea, para que no altere el archivo original
+                            while (lector.hasNext()) {
+                    
+                              if(cont==0){
+                               textoFichero +=(lector.nextLine());
+                            }else{
+                                textoFichero +=("\n"+lector.nextLine() );
+                            }
+                            cont++;
                         }//Fin del WHILE
                         lector.close();
                         flujo.close();
@@ -193,7 +202,7 @@ public class Panel_Pestanias extends JPanel {
 
             if (!textoFichero.equals(panelTAaux.textArea.getText())) {
 
-                int valor = JOptionPane.showConfirmDialog(Panel_Pestanias.TP, "¿Desea guardar antes de Cerrar?", "¿GUARDAR?", JOptionPane.YES_NO_OPTION, JOptionPane.OK_OPTION);
+                int valor = JOptionPane.showConfirmDialog(Panel_Pestanias.TP, "¿Desea guardar antes de Cerrar?", "¿GUARDAR?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
                 if (valor == JOptionPane.YES_OPTION) {
                     //             System.out.println("SALVANDO");
@@ -222,5 +231,8 @@ public class Panel_Pestanias extends JPanel {
         }//Fin del actionPerformed
 
     }//Fin de oyente cerrar pestaña
+    
+    
+    
 
 }//Final de la clase OanelPestanias

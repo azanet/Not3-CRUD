@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -129,7 +130,7 @@ public class Vista_LOGIN_BBDD extends JDialog {
             Controlador.ControladorVistaPrincipal.BBDDpuerto = EntradaPuerto.getText();
             Controlador.ControladorVistaPrincipal.BBDDname = EntradaNameBBDD.getText();
             Controlador.ControladorVistaPrincipal.BBDDusuario = EntradaUsuario.getText();
-            Controlador.ControladorVistaPrincipal.BBDDpass = EntradaPass.getText();
+            Controlador.ControladorVistaPrincipal.BBDDpass = Arrays.toString(EntradaPass.getPassword());
             Controlador.ControladorVistaPrincipal.BBDDaceptar = true;
             dispose();
 

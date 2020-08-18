@@ -181,7 +181,7 @@ public class Panel_Pestanias extends JPanel {
                         FileReader flujo = new FileReader(panelTAaux.fichero)) {
                     try (Scanner lector = new Scanner(flujo)) {
                         
-                          int cont=0;//esta variable es para imprimir o no los saltos de linea, para que no altere el archivo original
+                          long cont=0;//esta variable es para imprimir o no los saltos de linea, para que no altere el archivo original
                             while (lector.hasNext()) {
                     
                               if(cont==0){

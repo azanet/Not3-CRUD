@@ -51,9 +51,9 @@ public class VistaPrincipal extends JFrame {
         }
 
         //Le assignamos el tamaño a la Vista Principal
-        setBounds(0, 0, 658, 500);
-        setPreferredSize(new Dimension(658, 500));
-        setMinimumSize(new Dimension(658, 56));
+        setBounds(0, 0, 670, 500);
+        setPreferredSize(new Dimension(670, 500));
+        setMinimumSize(new Dimension(670, 56));
         //Con este método haremos que la pantalla salga JUSTO EN EL CENTRO
         setLocationRelativeTo(null);
 

@@ -46,6 +46,7 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.Delayed;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -179,6 +180,7 @@ public class ControladorVistaPrincipal {
         panelMenuBar.insertarFecha.addActionListener(new OyenteInsertarFecha());
         panelMenuBar.buscar.addActionListener(new OyenteBuscar());
         panelMenuBar.buscarYreemplazar.addActionListener(new OyenteBuscarYReemplazar());
+        panelMenuBar.buscarYreemplazarTodo.addActionListener(new OyenteBuscarYReemplazarTodo());
         panelMenuBar.imprimir_configurando.addActionListener(new OyenteImprimirConfigurando());
         panelMenuBar.imprimir_directo.addActionListener(new OyenteImprimirDirecto());
         panelMenuBar.acercaDe.addActionListener(new OyenteAcercaDe());
@@ -1078,14 +1080,36 @@ public class ControladorVistaPrincipal {
         @Override
         public void actionPerformed(ActionEvent ae) {
             //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+         
             try {
+                boolean vacio = true;
+                String textoABuscar ="";
+                
                 String textoInicialDeBusqueda = panelTA.textArea.getSelectedText();
                 if (textoInicialDeBusqueda == null) {
                     textoInicialDeBusqueda = "";
                 }
-                String textoABuscar = JOptionPane.showInputDialog(panelTA.textArea, "Texto a buscar", textoInicialDeBusqueda);
+                
+                
+                do{
+                textoABuscar = JOptionPane.showInputDialog(panelTA.textArea, "Texto a buscar", textoInicialDeBusqueda);
+                if (textoABuscar.equals("")) {
+                    JOptionPane.showMessageDialog(panelTA.textArea, "El campo de TEXTO está vacío", "ERROR ", JOptionPane.WARNING_MESSAGE);
+                    vacio=true;
+                }else{
+                    vacio=false;
+                }
+                
+                }while(vacio==true);
+                vacio=false;
+                
+                
+                
+                
+                
+                
                 Caret seleccion = panelTA.textArea.getCaret();
-
+                
                 int posicionInicial = 0;
                 if (seleccion.getDot() != seleccion.getMark()) {
                     // Hay algo seleccionado
@@ -1096,10 +1120,17 @@ public class ControladorVistaPrincipal {
                 int posicion = textoTotal.indexOf(textoABuscar, posicionInicial);
                 panelTA.textArea.setCaretPosition(posicion);
                 panelTA.textArea.moveCaretPosition(posicion);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(panelTA.textArea, "No se encuentra la PALABRA Indicada.", "ERROR de Busqueda ", JOptionPane.ERROR_MESSAGE);
-
-            }
+                
+                }catch ( IllegalArgumentException ei){
+                 JOptionPane.showMessageDialog(panelTA.textArea, "La palabra BUSCADA No Existe", "Palabra no encontrada", JOptionPane.WARNING_MESSAGE);
+                
+                }catch (NullPointerException e){
+                    JOptionPane.showMessageDialog(panelTA.textArea, "Operación Cancelada", "Operación CANCELADA", JOptionPane.WARNING_MESSAGE);
+                                    
+                }catch (Exception eia){
+                    JOptionPane.showMessageDialog(panelTA.textArea, "Se ha producido un ERROR", "ERROR", JOptionPane.ERROR_MESSAGE);
+                                    
+                }
         }//Fin action performed
     }//Fin del OyenteCOPIAR
 
@@ -1110,21 +1141,45 @@ public class ControladorVistaPrincipal {
         public void actionPerformed(ActionEvent ae) {
             //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
             try {
+                boolean vacio = true;
+            String textoNuevo = "";
+            String textoABuscar = "";
+            
                 String textoInicialDeBusqueda = panelTA.textArea.getSelectedText();
                 if (textoInicialDeBusqueda == null) {
                     textoInicialDeBusqueda = "";
                 }
-
+                
+                
+                do{
                 //Solicitamos laas palabras a buscar y reemplazar, en caso de cancelacion saldrá por la excepción
-                String textoABuscar = JOptionPane.showInputDialog(panelTA.textArea, "Texto a buscar", textoInicialDeBusqueda);
-                if (textoABuscar == null) {
-                    throw new ArithmeticException();
+                textoABuscar = "";
+                textoABuscar = JOptionPane.showInputDialog(panelTA.textArea, "Texto a BUSCAR", textoInicialDeBusqueda);
+                if (textoABuscar.equals("")) {
+                    JOptionPane.showMessageDialog(panelTA.textArea, "El campo de TEXTO está vacío", "ERROR ", JOptionPane.WARNING_MESSAGE);
+                    vacio=true;
+                }else{
+                    vacio=false;
                 }
-                String textoNuevo = JOptionPane.showInputDialog(panelTA.textArea, "Texto NUEVO", textoInicialDeBusqueda);
-                if (textoNuevo == null) {
-                    throw new ArithmeticException();
-                }
-
+                
+                }while(vacio==true);
+                vacio=false;
+                
+                
+                do{
+                textoNuevo = "";
+                textoNuevo = JOptionPane.showInputDialog(panelTA.textArea, "Texto NUEVO", textoInicialDeBusqueda);
+                if (textoNuevo.equals("")) {
+                    JOptionPane.showMessageDialog(panelTA.textArea, "El campo de TEXTO está vacío", "ERROR ", JOptionPane.WARNING_MESSAGE);
+                       vacio=true;
+                }else{
+                    vacio=false;
+                }//Fin del IF-textonuevo==""
+                
+                }while(vacio==true);
+                               
+                
+                try{
                 Caret seleccion = panelTA.textArea.getCaret();
 
                 int posicionInicial = 0;
@@ -1137,18 +1192,116 @@ public class ControladorVistaPrincipal {
                 int posicion = textoTotal.indexOf(textoABuscar, posicionInicial);
 
                 panelTA.textArea.replaceRange(textoNuevo, posicion, posicion + textoABuscar.length());
-
-            } catch (ArithmeticException e) {
-                JOptionPane.showMessageDialog(panelTA.textArea, "Operación Cancelada", "OPERACIÓN CANCELADA ", JOptionPane.CANCEL_OPTION);
-
+                }catch (Exception ei){
+                    JOptionPane.showMessageDialog(panelTA.textArea, "La Palabra buscada No se encuentra", "PALABRA NO ENCONTRADA", JOptionPane.WARNING_MESSAGE);
+                
+                }
+          
+                
+                
+                
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(panelTA.textArea, "No se encuentra la palabra buscada", "ERROR ", JOptionPane.CANCEL_OPTION);
-
+                 JOptionPane.showMessageDialog(panelTA.textArea, "Operación Cancelada", "OPERACIÓN CANCELADA ", JOptionPane.CANCEL_OPTION);
             }
         }//Fin action performed
     }//Fin del OyenteCOPIAR
 
 ////////////////////////////////////////////////////////////////////////////////   
+    ////////////////////////////////////////////////////////////////////////////////   
+    class OyenteBuscarYReemplazarTodo implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            //ESCRIBIR CÓDIGO DEL BOTÓN AQUÍ
+            try {
+                boolean vacio = true;
+            String textoNuevo = "";
+            String textoABuscar = "";
+            
+                String textoInicialDeBusqueda = panelTA.textArea.getSelectedText();
+                if (textoInicialDeBusqueda == null) {
+                    textoInicialDeBusqueda = "";
+                }
+                
+                
+                do{
+                //Solicitamos laas palabras a buscar y reemplazar, en caso de cancelacion saldrá por la excepción
+                textoABuscar = "";
+                textoABuscar = JOptionPane.showInputDialog(panelTA.textArea, "Texto a BUSCAR", textoInicialDeBusqueda);
+                if (textoABuscar.equals("")) {
+                    JOptionPane.showMessageDialog(panelTA.textArea, "El campo de TEXTO está vacío", "ERROR ", JOptionPane.WARNING_MESSAGE);
+                    vacio=true;
+                }else{
+                    vacio=false;
+                }
+                
+                }while(vacio==true);
+                vacio=false;
+                
+                
+                do{
+                textoNuevo = "";
+                textoNuevo = JOptionPane.showInputDialog(panelTA.textArea, "Texto NUEVO", textoInicialDeBusqueda);
+                if (textoNuevo.equals("")) {
+                    JOptionPane.showMessageDialog(panelTA.textArea, "El campo de TEXTO está vacío", "ERROR ", JOptionPane.WARNING_MESSAGE);
+                       vacio=true;
+                }else{
+                    vacio=false;
+                }//Fin del IF-textonuevo==""
+                
+                }while(vacio==true);
+                               
+                int contador=0;//Esta variable controlará si existe alguna palabra cambiada, según esta, mostraremos un mensaje u otro
+                try{
+                Caret seleccion = panelTA.textArea.getCaret();
+
+                int posicionInicial = 0;
+                if (seleccion.getDot() != seleccion.getMark()) {
+                    // Hay algo seleccionado
+                    posicionInicial = seleccion.getDot();
+                }
+                
+                do{
+                String textoTotal = panelTA.textArea.getText();
+                int posicion = textoTotal.indexOf(textoABuscar, posicionInicial);
+
+                panelTA.textArea.replaceRange(textoNuevo, posicion, posicion + textoABuscar.length());
+                contador++;
+                }while(true);
+                
+                }catch ( IllegalArgumentException ei){
+                    if (contador==0){
+                    JOptionPane.showMessageDialog(panelTA.textArea, "La palabra a buscar No Existe", "Palabra no encontrada", JOptionPane.WARNING_MESSAGE);
+                    }else{
+                    JOptionPane.showMessageDialog(panelTA.textArea, "Reemplazo finalizado", "Operación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    
+                }catch (Exception e){
+                    JOptionPane.showMessageDialog(panelTA.textArea, "Se ha producido un ERROR", "ERROR", JOptionPane.ERROR_MESSAGE);
+                                    
+                }
+          
+                
+                
+                
+            } catch (Exception e) {
+                 JOptionPane.showMessageDialog(panelTA.textArea, "Operación Cancelada", "OPERACIÓN CANCELADA ", JOptionPane.CANCEL_OPTION);
+            }
+        }//Fin action performed
+    }//Fin del OyenteCOPIAR
+
+////////////////////////////////////////////////////////////////////////////////  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     class OyenteImprimirConfigurando implements ActionListener {
 
         @Override

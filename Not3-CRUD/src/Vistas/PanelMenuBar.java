@@ -29,7 +29,7 @@ public class PanelMenuBar extends JPanel {
     private JMenuBar menuBar;
     public JMenu archivo, edicion, imprimir, bbdd, ayuda, personalizar;
     public JMenuItem nuevo;
-    public JMenuItem abrir, guardar, guardarComo, renombrar, ir_A, deshacer, rehacer, copiar, pegar, cortar, insertarFecha, buscar, buscarYreemplazar, imprimir_configurando, imprimir_directo, salir, acercaDe;
+    public JMenuItem abrir, guardar, guardarComo, renombrar, ir_A, deshacer, rehacer, copiar, pegar, cortar, insertarFecha, buscar, buscarYreemplazar, buscarYreemplazarTodo,imprimir_configurando, imprimir_directo, salir, acercaDe;
     //Haremos estos CheckBox estáticos, para poder utilizarlo en las distintas ventanas correspondientes y poder cambiar su valor si el usuario elige salir de estas
     public JMenuItem conectar_desconectar;
     public static JCheckBox insertar, consultar, modificar, eliminar;
@@ -67,6 +67,7 @@ public class PanelMenuBar extends JPanel {
         this.insertarFecha = new JMenuItem("Insertar Fecha/Hora");
         this.buscar = new JMenuItem("Buscar");
         this.buscarYreemplazar = new JMenuItem("Buscar y Reemplazar");
+        this.buscarYreemplazarTodo = new JMenuItem("Buscar y Reemplazar TODO");
         this.imprimir_configurando = new JMenuItem("Imprimir configurando");
         this.imprimir_directo = new JMenuItem("Imprimir directo");
         this.salir = new JMenuItem("Salir");
@@ -148,6 +149,7 @@ public class PanelMenuBar extends JPanel {
         edicion.add(ir_A);
         edicion.add(buscar);
         edicion.add(buscarYreemplazar);
+        edicion.add(buscarYreemplazarTodo);
         edicion.addSeparator();
         edicion.add(insertarFecha);
         //Menú Imprimir
